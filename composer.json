@@ -1,0 +1,15 @@
+{
+  "name": "writerscentre/course-product-acf-integration",
+  "authors": [
+    {
+      "name": "Amiel",
+      "email": "amiel@writerscentre.com.au"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "AWC\\": "lib/"
+    }
+  }
+}
