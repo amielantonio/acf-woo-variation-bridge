@@ -2,6 +2,16 @@
 
 namespace ACF\Fields\Basic;
 
-class ACF_Text {
+use ACF\Base\ACFInterface\Field_Interface;
+
+class ACF_Text implements Field_Interface {
+
+
+
+
+    public function build()
+    {
+
+    }
 
 }
