@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Base\Access;
+namespace ACFBridge\Base\Access;
 
 class ACF_Schema {
 

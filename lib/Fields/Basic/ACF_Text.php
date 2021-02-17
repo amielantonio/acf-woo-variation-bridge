@@ -1,10 +1,10 @@
 <?php
 
-namespace ACF\Fields\Basic;
+namespace ACFBridge\Fields\Basic;
 
-use ACF\Base\ACFInterface\Field_Interface;
+use ACFBridge\Base\ACFInterface\FieldInterface;
 
-class ACF_Text implements Field_Interface {
+class ACF_Text implements FieldInterface {
 
 
 

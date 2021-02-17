@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Fields\Relational;
+namespace ACFBridge\Fields\Relational;
 
 class ACF_Link
 {

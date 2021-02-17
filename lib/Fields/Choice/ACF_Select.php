@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Fields\Choice;
+namespace ACFBridge\Fields\Choice;
 
 class ACF_Select {
 

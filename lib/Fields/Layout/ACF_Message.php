@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Fields\Layout;
+namespace ACFBridge\Fields\Layout;
 
 class ACF_Message
 {

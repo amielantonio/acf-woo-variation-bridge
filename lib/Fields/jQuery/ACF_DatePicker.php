@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Fields\jQuery;
+namespace ACFBridge\Fields\jQuery;
 
 class ACF_DatePicker
 {

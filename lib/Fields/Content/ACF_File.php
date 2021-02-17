@@ -1,6 +1,6 @@
 <?php
 
-namespace ACF\Fields\Content;
+namespace ACFBridge\Fields\Content;
 
 class ACF_File {
 
