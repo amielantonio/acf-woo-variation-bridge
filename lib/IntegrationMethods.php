@@ -2,6 +2,8 @@
 
 namespace ACFBridge;
 
+use ACFBridge\Base\Access\ACF_Access;
+
 class IntegrationMethods
 {
 
@@ -21,6 +23,7 @@ class IntegrationMethods
         if (self::$instance === null) {
             self::$instance = new self;
         }
+
     }
 
     protected function instance()
@@ -29,20 +32,19 @@ class IntegrationMethods
     }
 
 
-    protected static function getFieldsFromCourse($course_id)
+    public static function getFieldsFromCourse($course_id)
     {
 
     }
 
-    protected static function getFieldById($field_id)
+    public static function getFieldById($field_id)
     {
 
     }
 
-    protected static function renderField( $field )
+    public static function renderField( $field )
     {
 
     }
-
 
 }

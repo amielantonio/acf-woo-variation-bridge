@@ -3,6 +3,7 @@
 namespace ACFBridge\Base\Access;
 
 use ACFBridge\Base\Access\ACF_Schema;
+use ACFBridge\Base\Access\ACF_Factory;
 
 class ACF_Access {
 
@@ -45,6 +46,12 @@ class ACF_Access {
     public function getFieldGroup()
     {
         return $this->field_group;
+    }
+
+
+    public function createWidget( $widget_type )
+    {
+
     }
 
 
