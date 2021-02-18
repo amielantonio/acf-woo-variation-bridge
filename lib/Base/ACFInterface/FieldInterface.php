@@ -4,6 +4,6 @@ namespace ACFBridge\Base\ACFInterface;
 
 interface FieldInterface {
 
-    public function build($widget);
+    public function build( $field );
 
 }
