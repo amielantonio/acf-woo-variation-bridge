@@ -2,7 +2,6 @@
 
 namespace ACFBridge\Base\Access;
 
-use ACFBridge\Base\Access\ACF_Schema;
 use ACFBridge\Base\Access\ACF_Factory;
 
 class ACF_Access {
@@ -23,10 +22,14 @@ class ACF_Access {
      */
     private $widgets = [];
 
+    private $factory;
+
 
     public function __construct( $field_group )
     {
         $this->field_group = $field_group;
+
+        $this->factory = new ACF_Factory;
     }
 
 
@@ -48,10 +51,17 @@ class ACF_Access {
         return $this->field_group;
     }
 
-
-    public function createWidget( $widget_type )
+    /**
+     * Render Widgets
+     *
+     * @param string $field_group
+     * @return string
+     */
+    public function renderWidgets( $field_group = "" )
     {
+        $field_group = $field_group <> "" ? $field_group : $this->field_group;
 
+        return $this->factory->makeWidgets( $field_group );
     }
 
 

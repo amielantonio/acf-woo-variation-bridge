@@ -62,7 +62,7 @@ class ACF_Schema {
                 $spawn[] = $this->getObjectField($child->ID);
             }
 
-            $field[$field_id] = array_merge($field[$field_id], $spawn);
+            $field[$field_id]['fields'] = $spawn;
         }
 
         return (object) $field;
