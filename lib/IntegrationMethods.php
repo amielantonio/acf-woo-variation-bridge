@@ -2,7 +2,6 @@
 
 namespace ACFBridge;
 
-use ACFBridge\Base\Access\ACF_Access;
 
 class IntegrationMethods
 {
