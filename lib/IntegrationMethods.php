@@ -2,6 +2,7 @@
 
 namespace ACFBridge;
 
+use ACFBridge\Base\Access\ACF_Factory;
 
 class IntegrationMethods
 {
@@ -29,7 +30,6 @@ class IntegrationMethods
     {
         return $this;
     }
-
 
     public static function getFieldsFromCourse($course_id)
     {

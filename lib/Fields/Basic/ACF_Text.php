@@ -3,16 +3,17 @@
 namespace ACFBridge\Fields\Basic;
 
 use ACFBridge\Base\ACFInterface\FieldHTML;
-use ACFBridge\Base\ACFInterface\FieldInterface;
 
-class ACF_Text extends FieldHTML implements FieldInterface{
+class ACF_Text extends FieldHTML {
 
+    protected $field;
 
     protected $fieldType = "Text";
 
-    public function build( $field )
-    {
 
+    public function __construct($field)
+    {
+        parent::__construct($field);
     }
 
 }

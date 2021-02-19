@@ -9,15 +9,33 @@ use ACFBridge\Fields\Basic\ACF_Text;
 class ACFBuilder
 {
 
-    public function build($widget)
+    private $field;
+
+    public function __construct( $field = "" )
     {
-        $method = "" . $this->widgetLookup($widget);
+        $this->field = $field;
+    }
+
+
+    public function build( $field = "" )
+    {
+        $wd = $field <> ""  ? $field : $this->field;
+
+        $method = "build" . $this->widgetLookup($this->field);
+
+        if (!$wd) {
+            return false;
+        }
+
+
+
+        return $this->$method($field);
+
     }
 
     public function buildText($field)
     {
-
-
+        $textBuilder = new ACF_Text();
     }
 
     public function buildTextarea( $field)
@@ -77,6 +95,5 @@ class ACFBuilder
 
         return $fields[$widget];
     }
-
 
 }
