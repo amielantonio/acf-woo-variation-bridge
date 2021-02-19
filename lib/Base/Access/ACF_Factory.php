@@ -11,9 +11,17 @@ class ACF_Factory
     /**
      * contains the field group of the ACF instance
      *
-     * @var string;
+     * @var int;
      */
     private $field_group_id;
+
+
+    /**
+     * contains the field id
+     *
+     * @var int;
+     */
+    private $field_id;
 
 
     /**
@@ -76,7 +84,7 @@ class ACF_Factory
 
         foreach($fieldGroupObj as $fieldProperties ) {
             foreach($fieldProperties->fields as $field) {
-                $this->make($field);
+                $this->makeWidget($field);
             }
         }
 
@@ -112,7 +120,7 @@ class ACF_Factory
      *
      * @param $field_group_object
      */
-    public function make( $field_group_object )
+    public function makeWidget( $field_group_object )
     {
 
     }

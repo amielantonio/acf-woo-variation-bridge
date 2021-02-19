@@ -12,6 +12,8 @@ class ACF_Schema {
      */
     public function getField( $field_id )
     {
+        var_dump($this->getObjectField($field_id));
+
         return $this->getObjectField($field_id);
     }
 
@@ -45,19 +47,20 @@ class ACF_Schema {
         $post = get_post($field_id);
         $content = $post->post_content;
 
-        if($post->post_type <> "acf-field" || $post->post_type <> "acf-field-group") return "Error! ID is not an ACF Field" ;
+        if($post->post_type <> "acf-field" && $post->post_type <> "acf-field-group") return "Error! ID is not an ACF Field" ;
 
         $field[$field_id] = [
             "field_title" => $post->post_title,
             "excerpt" => $post->post_excerpt,
             "field_name" => $post->post_name,
+            "content" => unserialize($content)
         ];
 
-        $field[$field_id] = array_merge($field[$field_id], $content);
-
         if($post->post_type == "acf-field-group" && $with_children) {
+
             $spawn = [];
-            $children = get_children($field_id);
+            $children = $this->get_field_objects($field_id);;
+
             foreach ($children as $child) {
                 $spawn[] = $this->getObjectField($child->ID);
             }
@@ -66,6 +69,16 @@ class ACF_Schema {
         }
 
         return (object) $field;
+    }
+
+
+    private function get_field_objects($field_group_id)
+    {
+        global $wpdb;
+
+        $table = $wpdb->prefix . "posts";
+
+        return $results = $wpdb->get_results("SELECT * FROM {$table} WHERE post_parent='$field_group_id'");
     }
 
 

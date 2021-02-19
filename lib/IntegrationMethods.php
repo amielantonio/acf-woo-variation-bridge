@@ -31,14 +31,22 @@ class IntegrationMethods
         return $this;
     }
 
-    public static function getFieldsFromCourse($course_id)
+    public static function getFieldsFromGroup($field_group_id)
     {
+        self::init();
 
+        $factory = new ACF_Factory($field_group_id);
+
+        $factory->renderWidgets();
     }
 
     public static function getFieldById($field_id)
     {
+        self::init();
 
+        $factory = new ACF_Factory($field_id);
+
+        $factory->renderWidgets();
     }
 
     public static function renderField( $field )
