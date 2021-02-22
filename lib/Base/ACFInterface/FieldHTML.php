@@ -2,8 +2,6 @@
 
 namespace ACFBridge\Base\ACFInterface;
 
-use ACFBridge\Base\ACFInterface\FieldInterface;
-
 abstract class FieldHTML implements FieldInterface
 {
     /**
@@ -77,11 +75,43 @@ abstract class FieldHTML implements FieldInterface
     protected $field;
 
     /**
+     *
+     *
+     * @var
+     */
+    protected $choices;
+
+    /**
+     *
+     *
+     * @var
+     */
+    protected $classes;
+
+    /**
+     *
+     *
+     * @var
+     */
+    protected $width;
+
+    /**
+     *
+     *
+     * @var
+     */
+    protected $id;
+
+
+
+    /**
      * The html info of the field that was mutated.
      *
      * @var array
      */
     private $htmlInfo = [];
+
+    protected $acf_default = [];
 
 
     /**
@@ -89,10 +119,12 @@ abstract class FieldHTML implements FieldInterface
      *
      *
      * @param array | object $field
+     * @param string $fieldType
      */
     public function __construct( $field )
     {
-        $this->field = $field;
+        $this->field = reset($field);
+        $this->acf_default = $this->map();
     }
 
 
@@ -101,11 +133,33 @@ abstract class FieldHTML implements FieldInterface
         $html = "";
         $html_info = $this->html();
 
+
         $html .= $this->opening_html;
 
 
 
         $html .= $this->closing_html;
+
+        return $html;
+    }
+
+
+    public function buildParentHTML($childHTML)
+    {
+        $html = "";
+        $label = "";
+
+
+    }
+
+    /**
+     * Render the
+     *
+     * @return string|void
+     */
+    public function render()
+    {
+        echo $this->build();
     }
 
     protected function html()
@@ -141,9 +195,31 @@ abstract class FieldHTML implements FieldInterface
         return $this->is_disabled <> "" ? "disabled='disabled'" : "";
     }
 
-    private function map()
+    public function map()
     {
+        $defaults = [];
+        if(empty($this->field)) return false;
 
+        foreach($this->field as $key => $value) {
+            if($key <> "content") {
+                $defaults[$key] = $value;
+            } else {
+                foreach($value as $content_key => $content_value) {
+                    $defaults[$content_key] = $content_value;
+                }
+            }
+
+        }
+
+        return $defaults;
     }
+
+
+    /*----------------------------------------------
+     * Getters and Setters
+     *---------------------------------------------
+     */
+
+
 
 }

@@ -24,6 +24,13 @@ class IntegrationMethods
             self::$instance = new self;
         }
 
+        self::$instance->autoload();
+
+    }
+
+    private function autoload()
+    {
+        require_once __DIR__ . '/../vendor/autoload.php';
     }
 
     protected function instance()
@@ -46,7 +53,7 @@ class IntegrationMethods
 
         $factory = new ACF_Factory($field_id);
 
-        $factory->renderWidgets();
+        $factory->renderWidget($field_id);
     }
 
     public static function renderField( $field )

@@ -1,41 +1,72 @@
 <?php
 
-namespace ACFBridge\Base\Access;
+namespace ACFBridge\Fields;
 
-use ACFBridge\Base\ACFInterface\FieldInterface;
 use ACFBridge\Fields\Basic\ACF_Text;
+use mysql_xdevapi\Exception;
 
-
-class ACFBuilder
+class ACF_Builder
 {
 
+    /**
+     * Field info
+     *
+     * @var array
+     */
     private $field;
 
-    public function __construct( $field = "" )
+    private $type = "text";
+
+    /**
+     * ACFBuilder constructor.
+     *
+     * @param array $field
+     */
+    public function __construct($field = [])
     {
         $this->field = $field;
     }
 
 
-    public function build( $field = "" )
+    /**
+     * Create a build HTML of the field info given
+     *
+     * @param array | object $field
+     * @return bool
+     * @throws \Exception
+     */
+    public function build( $field = [] )
     {
-        $wd = $field <> ""  ? $field : $this->field;
+        $wd = !empty($field)  ? $field : $this->field;
 
-        $method = "build" . $this->widgetLookup($this->field);
+        //reset($wd)['content']
+        $this->type = $type = reset($wd)['content']['type'];
+
+        $method = "build" . $this->widgetLookup($type);
 
         if (!$wd) {
             return false;
         }
 
-
-
-        return $this->$method($field);
-
+        if(method_exists($this, $method)) {
+            return $this->$method($field);
+        } else {
+            throw new \Exception("Build Failed, cannot build the widget you are referring to");
+        }
     }
 
+
+    /**
+     * Builds the widget with typed "text"
+     *
+     * @param $field
+     * @return string|void
+     */
     public function buildText($field)
     {
-        $textBuilder = new ACF_Text();
+        $textBuilder = new ACF_Text($field);
+
+        return $textBuilder->render();
     }
 
     public function buildTextarea( $field)

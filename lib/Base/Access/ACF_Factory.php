@@ -2,8 +2,7 @@
 
 namespace ACFBridge\Base\Access;
 
-use ACFBridge\Base\Access\ACF_Schema;
-use ACFBridge\Base\Access\ACFBuilder;
+use ACFBridge\Fields\ACF_Builder;
 
 class ACF_Factory
 {
@@ -46,9 +45,9 @@ class ACF_Factory
     ];
 
     /**
+     * ACF Schema
      *
-     *
-     * @var \ACFBridge\Base\Access\ACF_Schema
+     * @var ACF_Schema
      */
     private $schema;
 
@@ -68,6 +67,8 @@ class ACF_Factory
     {
         $this->field_group_id = $field_group_id;
         $this->schema =  new ACF_Schema;
+
+
     }
 
     /**
@@ -80,10 +81,10 @@ class ACF_Factory
     {
         $fieldGroupObj = (object) $this->getFieldGroupSchema( $field_group_id);
 
-        if( ! is_object($field_group_id)) return false;
+        if( ! is_object($fieldGroupObj)) return false;
 
         foreach($fieldGroupObj as $fieldProperties ) {
-            foreach($fieldProperties->fields as $field) {
+            foreach($fieldProperties['fields'] as $field) {
                 $this->makeWidget($field);
             }
         }
@@ -104,6 +105,15 @@ class ACF_Factory
         return $this->makeWidgets( $field_group_id );
     }
 
+    public function renderWidget( $field_id = "" )
+    {
+        $field_id = $field_id <> "" ? $field_id : $this->field_id;
+
+        $fieldObj = (object) $this->getFieldSchema($field_id);
+
+        return $this->makeWidget($fieldObj);
+    }
+
     /**
      *
      *
@@ -118,10 +128,15 @@ class ACF_Factory
     /**
      *
      *
-     * @param $field_group_object
+     * @param $field
+     * @return string
      */
-    public function makeWidget( $field_group_object )
+    public function makeWidget( $field )
     {
+
+        $builder = new ACF_Builder;
+
+        $builder->build($field);
 
     }
 
@@ -130,7 +145,7 @@ class ACF_Factory
      *
      * @param $field_group_id
      * @return object|string
-     */
+*/
     public function getFieldGroupSchema( $field_group_id )
     {
         return $this->widgets = $this->schema->getField($field_group_id);
@@ -155,6 +170,24 @@ class ACF_Factory
     public function getFieldGroup()
     {
         return $this->field_group_id;
+    }
+
+
+
+    public function getFieldSchema( $field_id )
+    {
+        return $this->widgets = $this->schema->getField($field_id);
+    }
+
+
+    public function setFieldID( $field_id )
+    {
+        $this->field_id = $field_id;
+    }
+
+    public function getFieldID()
+    {
+        return $this->field_id;
     }
 
 }

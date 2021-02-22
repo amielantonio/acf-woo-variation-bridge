@@ -2,6 +2,7 @@
 
 namespace ACFBridge\Base\Access;
 
+
 class ACF_Schema {
 
     /**
@@ -12,8 +13,6 @@ class ACF_Schema {
      */
     public function getField( $field_id )
     {
-        var_dump($this->getObjectField($field_id));
-
         return $this->getObjectField($field_id);
     }
 
@@ -33,6 +32,7 @@ class ACF_Schema {
 
         return $fields;
     }
+
 
     /**
      * Get the field object from the database
@@ -80,6 +80,10 @@ class ACF_Schema {
 
         return $results = $wpdb->get_results("SELECT * FROM {$table} WHERE post_parent='$field_group_id'");
     }
+
+
+
+
 
 
 
