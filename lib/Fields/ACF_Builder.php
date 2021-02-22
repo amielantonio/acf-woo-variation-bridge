@@ -3,6 +3,7 @@
 namespace ACFBridge\Fields;
 
 use ACFBridge\Fields\Basic\ACF_Text;
+use ACFBridge\Fields\Choice\ACF_Select;
 use mysql_xdevapi\Exception;
 
 class ACF_Builder
@@ -42,7 +43,7 @@ class ACF_Builder
         //reset($wd)['content']
         $this->type = $type = reset($wd)['content']['type'];
 
-        $method = "build" . $this->widgetLookup($type);
+        echo $method = "build" . $this->widgetLookup($type);
 
         if (!$wd) {
             return false;
@@ -69,22 +70,26 @@ class ACF_Builder
         return $textBuilder->render();
     }
 
-    public function buildTextarea( $field)
+    public function buildTextarea($field)
     {
 
     }
 
     public function buildNumber($field)
     {
+        $textBuilder = new ACF_Text($field, ["type" => "num"]);
 
+        return $textBuilder->render();
     }
 
     public function buildEmail($field)
     {
+        $textBuilder = new ACF_Text($field, ["type" => "email"]);
 
+        return $textBuilder->render();
     }
 
-    public function buildURL()
+    public function buildURL($field)
     {
 
     }
@@ -94,9 +99,17 @@ class ACF_Builder
 
     }
 
-    public function buildSelect()
+    /**
+     * Builds a dropdown widget
+     *
+     * @param $field
+     * @return string|void
+     */
+    public function buildSelect($field)
     {
+        $selectBuilder = new ACF_Select($field);
 
+        return $selectBuilder->render();
     }
 
 

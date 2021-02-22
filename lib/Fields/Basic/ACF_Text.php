@@ -4,12 +4,24 @@ namespace ACFBridge\Fields\Basic;
 
 use ACFBridge\Base\ACFInterface\FieldHTML;
 
-class ACF_Text extends FieldHTML {
-
+class ACF_Text extends FieldHTML
+{
+    /**
+     * @override $field
+     * @var object | array
+     */
     protected $field;
 
+    /**
+     * @override fieldType
+     * @var string
+     */
     protected $fieldType = "text";
 
+    /**
+     * @ovverride acf_default
+     * @var array
+     */
     protected $acf_default = [
         "field_title" => "",
         "excerpt" => "",
@@ -23,19 +35,14 @@ class ACF_Text extends FieldHTML {
         "maxLength" => ""
     ];
 
-
-    public function __construct($field)
+    /**
+     * ACF_Text constructor.
+     *
+     * @param $field
+     */
+    public function __construct($field, $options = [])
     {
         parent::__construct($field);
     }
-
-
-    public function build()
-    {
-        
-
-    }
-
-
 
 }
