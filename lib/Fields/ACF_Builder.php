@@ -4,6 +4,7 @@ namespace ACFBridge\Fields;
 
 use ACFBridge\Fields\Basic\ACF_Text;
 use ACFBridge\Fields\Choice\ACF_Select;
+use ACFBridge\Fields\Relational\ACF_PostObject;
 use mysql_xdevapi\Exception;
 
 class ACF_Builder
@@ -43,7 +44,7 @@ class ACF_Builder
         //reset($wd)['content']
         $this->type = $type = reset($wd)['content']['type'];
 
-        echo $method = "build" . $this->widgetLookup($type);
+        $method = "build" . $this->widgetLookup($type);
 
         if (!$wd) {
             return false;
@@ -110,6 +111,13 @@ class ACF_Builder
         $selectBuilder = new ACF_Select($field);
 
         return $selectBuilder->render();
+    }
+
+    public function buildPostObject($field)
+    {
+        $postObjectBuilder = new ACF_PostObject($field);
+
+        var_dump($field);
     }
 
 
