@@ -125,19 +125,17 @@ class ACF_Factory
         return in_array($widget_type, $this->allowedFields);
     }
 
+
     /**
-     *
+     * Call the build process
      *
      * @param $field
-     * @return string
+     * @throws \Exception
      */
     public function makeWidget( $field )
     {
-
         $builder = new ACF_Builder;
-
         $builder->build($field);
-
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace ACFBridge\Fields\Relational;
 
 use ACFBridge\Fields\Choice\ACF_Select;
+use WP_Query;
 
 class ACF_PostObject extends ACF_Select {
 
@@ -47,31 +48,32 @@ class ACF_PostObject extends ACF_Select {
     public function __construct($field, $options = [])
     {
         parent::__construct($field, $options);
-
+        $this->getPostObjectChoices();
     }
 
     /**
-     * Build Select
-     *
-     * @return string
+     * Create a post_object choices, then sets it as the choices for the select dropdown
      */
-    public function buildField()
+    public function getPostObjectChoices()
     {
-        $htmlInfo = $this->html();
-        $oHtml = $this->opening_html;
-        $cHtml = $this->closing_html;
-        $choices = $this->choices();
+        $post_type = $this->field['content']['post_type'][0];
 
-        $html = "
-            {$oHtml} {$htmlInfo['wrappers']}
-                {$htmlInfo['required']} 
-                {$htmlInfo['disabled']}
-                {$htmlInfo['mulitple']}>
-                {$choices}            
-            {$cHtml}
-        ";
-        return $html;
+        $choices = [];
+        $args  = [
+            'post_type' => $post_type,
+            'order' => 'ASC',
+            'posts_per_page' => -1,
+            'orderby' => 'title'
+        ];
+
+        $query = new WP_Query($args);
+
+        foreach($query->posts as $post) {
+            $choices[$post->ID] = $post->post_title;
+        }
+
+
+        $this->setChoices($choices);
     }
-
 
 }

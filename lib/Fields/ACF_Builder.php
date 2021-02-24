@@ -117,7 +117,7 @@ class ACF_Builder
     {
         $postObjectBuilder = new ACF_PostObject($field);
 
-        var_dump($field);
+        return $postObjectBuilder->render();
     }
 
 

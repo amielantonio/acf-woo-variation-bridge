@@ -345,5 +345,10 @@ abstract class FieldHTML implements FieldInterface
         }
     }
 
+    public function setChoices($choices)
+    {
+        $this->choices = $choices;
+    }
+
 
 }
