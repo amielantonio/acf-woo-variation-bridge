@@ -145,8 +145,12 @@ class ACF_Factory
      */
     public function makeWidget( $field )
     {
-        $builder = new ACF_Builder;
-        return $builder->build($field);
+        try {
+            $builder = new ACF_Builder;
+            return $builder->build($field);
+        } catch (Exception $e){
+            echo $e;
+        }
     }
 
     /**

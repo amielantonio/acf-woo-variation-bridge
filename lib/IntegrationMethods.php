@@ -66,6 +66,7 @@ class IntegrationMethods
      * Get the field based on the ID given
      *
      * @param $field_id
+     * @return IntegrationMethods
      * @throws Exception
      */
     public static function getFieldById($field_id)
@@ -75,6 +76,13 @@ class IntegrationMethods
         $factory = new ACF_Factory($field_id);
 
         $factory->renderWidget($field_id);
+
+        return self::$instance;
+    }
+
+    public static function addLoopingSupport( $bool = true )
+    {
+
     }
 
 }
