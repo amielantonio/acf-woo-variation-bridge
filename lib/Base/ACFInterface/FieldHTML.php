@@ -35,9 +35,9 @@ abstract class FieldHTML implements FieldInterface
     /**
      * The HTML Class of the form widget
      *
-     * @var string
+     * @var array
      */
-    protected $html_class;
+    protected $html_class = [];
 
     /**
      * The placeholder for the form widget
@@ -237,9 +237,9 @@ abstract class FieldHTML implements FieldInterface
     }
 
 
-    protected function getValue()
+    protected function getValue($id)
     {
-        
+
     }
 
 
@@ -258,13 +258,20 @@ abstract class FieldHTML implements FieldInterface
         return $this->is_disabled > 0 ? "disabled='disabled'" : "";
     }
 
+    /**
+     * create the classes and id of the field
+     *
+     * @return string
+     */
     protected function wrappers()
     {
         $width = $this->width <> 0 && $this->width <> ""
             ? " width='{$this->width}'"
             : "";
 
-        return "class='{$this->html_class}' id='{$this->html_id}'{$width}";
+        $classes = implode(" ", $this->html_class);
+
+        return "class='{$classes}' id='{$this->html_id}'{$width}";
     }
 
     protected function choices()
@@ -282,6 +289,11 @@ abstract class FieldHTML implements FieldInterface
         return $this->is_disabled > 0 ? "multiple='multiple'" : "";
     }
 
+
+    public function addClass($class)
+    {
+        $this->html_class[] = $class;
+    }
 
 
     public function map()
@@ -313,11 +325,20 @@ abstract class FieldHTML implements FieldInterface
         $this->fieldType = isset($this->options['type']) ? $this->options['type'] : $this->acf_default['type'];
         $this->description = isset($this->options['description']) ? $this->options['description'] : $this->acf_default['instructions'];
         $this->is_required = isset($this->options['required']) ? $this->options['required'] : $this->acf_default['required'];
-        $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : $this->acf_default['wrapper']['class'];
-        $this->html_id = isset($this->options['html_id']) ? $this->options['id'] : $this->acf_default['wrapper']['id'];
+
         $this->defaultValue = isset($this->options['value']) ? $this->options['value'] : $this->acf_default['default_value'];
         $this->placeholder = isset($this->options['placeholder']) ? $this->options['placeholder'] : $this->acf_default['placeholder'];
         $this->choices = isset($this->options['choices']) ? $this->options['choices'] : $this->acf_default['choices'];
+
+
+        $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
+
+        $this->html_id = isset($this->options['html_id']) ? $this->options['id'] : $this->acf_default['wrapper']['id'];
+    }
+
+    public function addScript()
+    {
+
     }
 
 

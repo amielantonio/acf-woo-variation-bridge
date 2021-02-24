@@ -3,9 +3,11 @@
 namespace ACFBridge\Fields;
 
 use ACFBridge\Fields\Basic\ACF_Text;
+use ACFBridge\Fields\Basic\ACF_TextArea;
 use ACFBridge\Fields\Choice\ACF_Select;
+use ACFBridge\Fields\jQuery\ACF_DatePicker;
 use ACFBridge\Fields\Relational\ACF_PostObject;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ACF_Builder
 {
@@ -35,7 +37,7 @@ class ACF_Builder
      *
      * @param array | object $field
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function build( $field = [] )
     {
@@ -62,7 +64,7 @@ class ACF_Builder
      * Builds the widget with typed "text"
      *
      * @param $field
-     * @return string|void
+     * @return string
      */
     public function buildText($field)
     {
@@ -73,7 +75,9 @@ class ACF_Builder
 
     public function buildTextarea($field)
     {
+        $textareaBuilder = new ACF_TextArea($field);
 
+        return $textareaBuilder->render();
     }
 
     public function buildNumber($field)
@@ -92,19 +96,32 @@ class ACF_Builder
 
     public function buildURL($field)
     {
+        $textBuilder = new ACF_Text($field);
 
+        return $textBuilder->render();
     }
 
     public function buildPassword($field)
     {
+        $textBuilder = new ACF_Text($field, ["type" => "password"]);
 
+        return $textBuilder->render();
     }
+
+    public function buildDatePicker($field)
+    {
+        $datepickerBuilder = new ACF_DatePicker($field);
+
+        return $datepickerBuilder->render();
+    }
+
+
 
     /**
      * Builds a dropdown widget
      *
      * @param $field
-     * @return string|void
+     * @return string
      */
     public function buildSelect($field)
     {
@@ -113,6 +130,12 @@ class ACF_Builder
         return $selectBuilder->render();
     }
 
+    /**
+     * Build a dropdown with posts as choices
+     *
+     * @param $field
+     * @return string
+     */
     public function buildPostObject($field)
     {
         $postObjectBuilder = new ACF_PostObject($field);

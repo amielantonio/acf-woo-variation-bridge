@@ -19,7 +19,7 @@ class ACF_Text extends FieldHTML
     protected $fieldType = "text";
 
     /**
-     * @ovverride acf_default
+     * @override acf_default
      * @var array
      */
     protected $acf_default = [
