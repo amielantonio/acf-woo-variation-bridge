@@ -12,7 +12,7 @@
       "ACFBridge\\": "lib/"
     },
     "classmap" : [
-      "lib/Fields"
+      "exception"
     ]
   }
 }
