@@ -236,6 +236,13 @@ abstract class FieldHTML implements FieldInterface
         return $this->defaultValue <> "" ? "value='{$this->defaultValue}'" : "";
     }
 
+
+    protected function getValue()
+    {
+        
+    }
+
+
     protected function placeholderHTML()
     {
         return $this->placeholder <> "" ? "placeholder='{$this->placeholder}'" : "";

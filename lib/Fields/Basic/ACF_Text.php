@@ -38,11 +38,12 @@ class ACF_Text extends FieldHTML
     /**
      * ACF_Text constructor.
      *
+     * @param array $options
      * @param $field
      */
     public function __construct($field, $options = [])
     {
-        parent::__construct($field);
+        parent::__construct($field, $options);
     }
 
 }

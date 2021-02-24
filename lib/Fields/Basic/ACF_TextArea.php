@@ -49,14 +49,14 @@ class ACF_TextArea extends FieldHTML {
         $htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
-        $choices = $this->choices();
+
 
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}
                 {$htmlInfo['required']} 
                 {$htmlInfo['disabled']}
                 {$htmlInfo['mulitple']}>
-                {$choices}            
+                    {$htmlInfo['value']}                
             {$cHtml}
         ";
         return $html;
