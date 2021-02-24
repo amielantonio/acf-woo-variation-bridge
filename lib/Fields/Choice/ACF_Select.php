@@ -33,12 +33,13 @@ class ACF_Select extends FieldHTML {
         "id" => "",
         "default_value" => "",
         "placeholder" => "",
-        "maxLength" => ""
+        "maxLength" => "",
+        "choices" => []
     ];
 
     protected $opening_html = "<select";
 
-    protected $closing_html = "</select";
+    protected $closing_html = "</select>";
 
     /**
      * ACF_Text constructor.
