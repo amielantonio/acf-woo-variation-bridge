@@ -2,6 +2,8 @@
 
 namespace ACFBridge\Fields;
 
+use ACFBridge\Fields\Basic\ACF_Email;
+use ACFBridge\Fields\Basic\ACF_Number;
 use ACFBridge\Fields\Basic\ACF_Text;
 use ACFBridge\Fields\Basic\ACF_TextArea;
 use ACFBridge\Fields\Choice\ACF_Select;
@@ -73,23 +75,23 @@ class ACF_Builder
         return $textBuilder->render();
     }
 
-    public function buildTextarea($field)
+    public function buildTextArea($field)
     {
-        $textareaBuilder = new ACF_TextArea($field);
+        $textAreaBuilder = new ACF_TextArea($field);
 
-        return $textareaBuilder->render();
+        return $textAreaBuilder->render();
     }
 
     public function buildNumber($field)
     {
-        $textBuilder = new ACF_Text($field, ["type" => "num"]);
+        $textBuilder = new ACF_Number($field);
 
         return $textBuilder->render();
     }
 
     public function buildEmail($field)
     {
-        $textBuilder = new ACF_Text($field, ["type" => "email"]);
+        $textBuilder = new ACF_Email($field);
 
         return $textBuilder->render();
     }
