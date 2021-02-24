@@ -3,6 +3,7 @@
 namespace ACFBridge\Base\Access;
 
 use ACFBridge\Fields\ACF_Builder;
+use Exception;
 
 class ACF_Factory
 {
@@ -72,10 +73,11 @@ class ACF_Factory
     }
 
     /**
-     *
+     * Make widgets under that are under the field group
      *
      * @param $field_group_id
-     * @return string
+     * @return bool
+     * @throws Exception
      */
     public function makeWidgets( $field_group_id )
     {
@@ -93,10 +95,11 @@ class ACF_Factory
     }
 
     /**
-     * Render Widgets
+     * Render the HTML widget
      *
      * @param string $field_group_id
-     * @return string
+     * @return bool
+     * @throws Exception
      */
     public function renderWidgets( $field_group_id = "" )
     {
@@ -105,6 +108,13 @@ class ACF_Factory
         return $this->makeWidgets( $field_group_id );
     }
 
+    /**
+     * Render a single widget
+     *
+     * @param string $field_id
+     * @return bool | string
+     * @throws Exception
+     */
     public function renderWidget( $field_id = "" )
     {
         $field_id = $field_id <> "" ? $field_id : $this->field_id;
@@ -130,12 +140,13 @@ class ACF_Factory
      * Call the build process
      *
      * @param $field
-     * @throws \Exception
+     * @return bool | string
+     * @throws Exception
      */
     public function makeWidget( $field )
     {
         $builder = new ACF_Builder;
-        $builder->build($field);
+        return $builder->build($field);
     }
 
     /**
@@ -171,18 +182,33 @@ class ACF_Factory
     }
 
 
-
+    /**
+     * Get the field's schema
+     *
+     * @param $field_id
+     * @return object|string
+     */
     public function getFieldSchema( $field_id )
     {
         return $this->widgets = $this->schema->getField($field_id);
     }
 
 
+    /**
+     * Set the id of the field
+     *
+     * @param $field_id
+     */
     public function setFieldID( $field_id )
     {
         $this->field_id = $field_id;
     }
 
+    /**
+     * Get the id of the field
+     *
+     * @return int
+     */
     public function getFieldID()
     {
         return $this->field_id;
