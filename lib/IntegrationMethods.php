@@ -3,6 +3,7 @@
 namespace ACFBridge;
 
 use ACFBridge\Base\Access\ACF_Factory;
+use Exception;
 
 class IntegrationMethods
 {
@@ -28,16 +29,30 @@ class IntegrationMethods
 
     }
 
+    /**
+     * Autoload vendor
+     */
     private function autoload()
     {
         require_once __DIR__ . '/../vendor/autoload.php';
     }
 
+    /**
+     * return the instance of this class
+     *
+     * @return $this
+     */
     protected function instance()
     {
         return $this;
     }
 
+    /**
+     * Get the field group from ACF based on the ID given
+     *
+     * @param $field_group_id
+     * @throws Exception
+     */
     public static function getFieldsFromGroup($field_group_id)
     {
         self::init();
@@ -47,6 +62,12 @@ class IntegrationMethods
         $factory->renderWidgets();
     }
 
+    /**
+     * Get the field based on the ID given
+     *
+     * @param $field_id
+     * @throws Exception
+     */
     public static function getFieldById($field_id)
     {
         self::init();
@@ -54,11 +75,6 @@ class IntegrationMethods
         $factory = new ACF_Factory($field_id);
 
         $factory->renderWidget($field_id);
-    }
-
-    public static function renderField( $field )
-    {
-
     }
 
 }
