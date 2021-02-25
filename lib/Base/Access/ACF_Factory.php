@@ -4,7 +4,6 @@ namespace ACFBridge\Base\Access;
 
 use ACFBridge\Fields\ACF_Builder;
 use Exception;
-use function simplehtmldom_1_5\dump_html_tree;
 
 class ACF_Factory
 {
@@ -53,6 +52,8 @@ class ACF_Factory
      */
     private $html_class = [];
 
+    private $dataAttributes = [];
+
 
     /**
      * Allowed Fields
@@ -96,7 +97,7 @@ class ACF_Factory
      * @param int | null $field_group_id
      * @param int $ctr
      */
-    public function __construct( $field_group_id = null, $loop_support = false, $ctr = 0)
+    public function __construct($field_group_id = null, $loop_support = false, $ctr = 0)
     {
         $this->field_group_id = $field_group_id;
 
@@ -104,7 +105,7 @@ class ACF_Factory
 
         $this->ctr = $ctr;
 
-        $this->schema =  new ACF_Schema;
+        $this->schema = new ACF_Schema;
 
     }
 
@@ -115,16 +116,16 @@ class ACF_Factory
      * @return bool | string
      * @throws Exception
      */
-    public function makeWidgets( $field_group_id )
+    public function makeWidgets($field_group_id)
     {
-        $fieldGroupObj = (object) $this->getFieldGroupSchema( $field_group_id );
+        $fieldGroupObj = (object)$this->getFieldGroupSchema($field_group_id);
 
         $html = "";
 
-        if( ! is_object($fieldGroupObj)) return false;
+        if (!is_object($fieldGroupObj)) return false;
 
-        foreach($fieldGroupObj as $fieldProperties ) {
-            foreach($fieldProperties['fields'] as $field) {
+        foreach ($fieldGroupObj as $fieldProperties) {
+            foreach ($fieldProperties['fields'] as $field) {
                 $html .= $this->makeWidget($field);
             }
         }
@@ -139,11 +140,11 @@ class ACF_Factory
      * @return bool
      * @throws Exception
      */
-    public function renderWidgets( $field_group_id = "" )
+    public function renderWidgets($field_group_id = "")
     {
         $field_group_id = $field_group_id <> "" ? $field_group_id : $this->field_group_id;
 
-        return $this->makeParent($this->makeWidgets( $field_group_id ), true);
+        return $this->makeParent($this->makeWidgets($field_group_id), true);
     }
 
     /**
@@ -153,11 +154,11 @@ class ACF_Factory
      * @return bool | string
      * @throws Exception
      */
-    public function renderWidget( $field_id = "" )
+    public function renderWidget($field_id = "")
     {
         $field_id = $field_id <> "" ? $field_id : $this->field_id;
 
-        $fieldObj = (object) $this->getFieldSchema($field_id);
+        $fieldObj = (object)$this->getFieldSchema($field_id);
 
         return $this->makeParent($this->makeWidget($fieldObj), true);
     }
@@ -170,14 +171,14 @@ class ACF_Factory
      * @param bool $makeParent
      * @return string
      */
-    public function makeParent( $child, $makeParent = false )
+    public function makeParent($child, $makeParent = false)
     {
-        if($makeParent)
-        {
+        if ($makeParent) {
             $id = $this->html_id;
             $class = implode(" ", $this->html_class);
+            $dataAttributes = $this->createDataAttributesHTML();
 
-            return "<div class='bridge-parent $class' id='{$id}'>
+            return "<div class='bridge-parent $class' id='{$id}' {$dataAttributes}>
                         {$child}
                     </div>";
         }
@@ -186,16 +187,28 @@ class ACF_Factory
 
     }
 
-    public function setParentHtmlID( $id )
+    /**
+     * Set the parent HTML ID
+     *
+     * @param $id
+     * @return $this
+     */
+    public function setParentHtmlID($id)
     {
         $this->html_id = $id;
 
         return $this;
     }
 
+    /**
+     * Add a parent html class to the existing classes
+     *
+     * @param $class
+     * @return $this
+     */
     public function addParentHtmlClass($class)
     {
-        if(is_array($class)){
+        if (is_array($class)) {
             $this->html_class = array_merge($this->html_class, $class);
         } else {
             $this->html_class[] = $class;
@@ -204,10 +217,50 @@ class ACF_Factory
         return $this;
     }
 
+    /**
+     * Add html data attributes
+     *
+     * @param $key
+     * @param string $value
+     * @return $this
+     */
+    public function addDataAttributes($key, $value = "")
+    {
+        if(is_array($key)){
+            $this->dataAttributes = array_merge($this->dataAttributes, $key);
+        } else {
+            $this->dataAttributes[$key] = $value;
+        }
 
+        return $this;
+    }
 
     /**
+     * Create the html format of the data attribute
      *
+     * @return string
+     */
+    private function createDataAttributesHTML()
+    {
+        $html = "";
+
+        /*
+         * Make sure that we wont be returning any
+         * random html code when data attribute is empty
+         */
+        if(!empty($this->dataAttributes)){
+            foreach($this->dataAttributes as $key => $attribute) {
+                $html .= "data-{$key}='{$attribute}'";
+            }
+
+            return $html;
+        }
+
+        return "";
+    }
+
+    /**
+     * check if the widget that is trying to be created is currently supported by the library
      *
      * @param $widget_type
      * @return bool
@@ -217,7 +270,6 @@ class ACF_Factory
         return in_array($widget_type, $this->supportedFields);
     }
 
-
     /**
      * Call the build process
      *
@@ -225,24 +277,23 @@ class ACF_Factory
      * @return bool | string
      * @throws Exception
      */
-    public function makeWidget( $field )
+    public function makeWidget($field)
     {
         try {
             $builder = new ACF_Builder($field, $this->loop_support, $this->ctr);
             return $builder->build();
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo $e;
         }
     }
-
 
     /**
      *
      *
      * @param $field_group_id
      * @return object|string
-*/
-    public function getFieldGroupSchema( $field_group_id )
+     */
+    public function getFieldGroupSchema($field_group_id)
     {
         return $this->widgets = $this->schema->getField($field_group_id);
     }
@@ -275,7 +326,7 @@ class ACF_Factory
      * @param $field_id
      * @return object|string
      */
-    public function getFieldSchema( $field_id )
+    public function getFieldSchema($field_id)
     {
         return $this->widgets = $this->schema->getField($field_id);
     }
@@ -286,7 +337,7 @@ class ACF_Factory
      *
      * @param $field_id
      */
-    public function setFieldID( $field_id )
+    public function setFieldID($field_id)
     {
         $this->field_id = $field_id;
     }

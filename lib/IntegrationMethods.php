@@ -57,6 +57,13 @@ class IntegrationMethods
      */
     private $html_class = [];
 
+    /**
+     * Add Data attributes to parent HTML
+     *
+     * @var array
+     */
+    private $dataAttributes = [];
+
 
     /**
      * Initialize Class
@@ -174,6 +181,17 @@ class IntegrationMethods
         return $this->instance();
     }
 
+    public function addDataAttribute($key, $value = "")
+    {
+        if(is_array($key)){
+            $this->dataAttributes = array_merge($this->dataAttributes, $key);
+        } else {
+            $this->dataAttributes[$key] = $value;
+        }
+
+        return $this->instance();
+    }
+
 
     /**
      * Render the Widget created from the factory
@@ -187,12 +205,14 @@ class IntegrationMethods
 
             echo $factory->addParentHtmlClass($this->html_class)
                 ->setParentHtmlID($this->html_id)
+                ->addDataAttributes($this->dataAttributes)
                 ->renderWidgets();
         } else {
             $factory = new ACF_Factory(null, $this->loop_support, $this->ctr);
 
             echo $factory->addParentHtmlClass($this->html_class)
                 ->setParentHtmlID($this->html_id)
+                ->addDataAttributes($this->dataAttributes)
                 ->renderWidget($this->field_id);
         }
     }
