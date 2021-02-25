@@ -6,10 +6,25 @@ use ACFBridge\Base\ACFInterface\FieldHTML;
 
 class ACF_TextArea extends FieldHTML {
 
+    /**
+     * Fields
+     *
+     * @var
+     */
     protected $field;
 
+    /**
+     * text area type
+     *
+     * @var string
+     */
     protected $fieldType = "textarea";
 
+    /**
+     * defaults of acf
+     *
+     * @var array
+     */
     protected $acf_default = [
         "field_title" => "",
         "excerpt" => "",
@@ -23,8 +38,18 @@ class ACF_TextArea extends FieldHTML {
         "maxLength" => ""
     ];
 
+    /**
+     * textarea opening html
+     *
+     * @var string
+     */
     protected $opening_html = "<textarea";
 
+    /**
+     * Textarea closing html
+     *
+     * @var string
+     */
     protected $closing_html = "</textarea>";
 
     /**
@@ -55,7 +80,8 @@ class ACF_TextArea extends FieldHTML {
             {$oHtml} {$htmlInfo['wrappers']}
                 {$htmlInfo['required']} 
                 {$htmlInfo['disabled']}
-                {$htmlInfo['mulitple']}>
+                {$htmlInfo['mulitple']}
+                {$htmlInfo['name']}>
                     {$htmlInfo['value']}                
             {$cHtml}
         ";

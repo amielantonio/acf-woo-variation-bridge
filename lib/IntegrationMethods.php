@@ -174,6 +174,12 @@ class IntegrationMethods
         return $this->instance();
     }
 
+    /**
+     * Set all html class instead of adding new classes
+     *
+     * @param $class
+     * @return IntegrationMethods
+     */
     public function setParentHtmlClass( $class )
     {
         $this->html_class = $class;
@@ -181,6 +187,13 @@ class IntegrationMethods
         return $this->instance();
     }
 
+    /**
+     * Add data attribute support
+     *
+     * @param $key
+     * @param string $value
+     * @return IntegrationMethods
+     */
     public function addDataAttribute($key, $value = "")
     {
         if(is_array($key)){

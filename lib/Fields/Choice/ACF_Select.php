@@ -69,7 +69,8 @@ class ACF_Select extends FieldHTML {
             {$oHtml} {$htmlInfo['wrappers']}
                 {$htmlInfo['required']} 
                 {$htmlInfo['disabled']}
-                {$htmlInfo['mulitple']}>
+                {$htmlInfo['mulitple']}
+                {$htmlInfo['name']}>
                 {$choices}            
             {$cHtml}
         ";

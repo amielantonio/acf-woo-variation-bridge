@@ -26,6 +26,13 @@ abstract class FieldHTML implements FieldInterface
     protected $fieldType;
 
     /**
+     * The field name
+     *
+     * @var
+     */
+    protected $name;
+
+    /**
      * The HTML ID of the form widget
      *
      * @var string
@@ -117,18 +124,19 @@ abstract class FieldHTML implements FieldInterface
     protected $acf_default = [];
 
     /**
-     * Fillable variables
+     * Attribute variables
      *
      * @var array
      */
-   protected $fillable = [];
+    protected $attributes = [];
 
+    protected $dataAttributes = [];
 
-   protected $options = [];
+    protected $options = [];
 
-   private $loop_support = false;
+    private $loop_support = false;
 
-   private $ctr = 0;
+    private $ctr = 0;
 
 
     /**
@@ -138,7 +146,7 @@ abstract class FieldHTML implements FieldInterface
      * @param array | object $field
      * @param array $options
      */
-    public function __construct( $field, $options = [] )
+    public function __construct($field, $options = [])
     {
         $this->field = reset($field);
         $this->options = $options;
@@ -167,7 +175,7 @@ abstract class FieldHTML implements FieldInterface
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
 
-        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']}
+        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} {$this->htmlInfo['name']}
                 {$this->htmlInfo['required']}
                 {$this->htmlInfo['value']}
                 {$this->htmlInfo['disabled']}
@@ -215,13 +223,14 @@ abstract class FieldHTML implements FieldInterface
     protected function html()
     {
         return [
+            "name" => $this->nameHTML(),
             "type" => $this->fieldTypeHTML(),
             "wrappers" => $this->wrappers(),
             "placeholder" => $this->placeholderHTML(),
             "required" => $this->requiredHTML(),
             "value" => $this->defaultValueHTML(),
             "disabled" => $this->disabledHTML(),
-            "multiple" => $this->is_multiple()
+            "multiple" => $this->is_multiple(),
         ];
     }
 
@@ -246,6 +255,10 @@ abstract class FieldHTML implements FieldInterface
 
     }
 
+    protected function nameHTML()
+    {
+        return $this->name <> "" ? "name='{$this->name}'" : "";
+    }
 
     protected function placeholderHTML()
     {
@@ -287,7 +300,7 @@ abstract class FieldHTML implements FieldInterface
     {
         $html = "";
 
-        foreach($this->choices as $key => $value) {
+        foreach ($this->choices as $key => $value) {
             $html .= "<option value='{$key}'>{$value}</option>";
         }
 
@@ -312,7 +325,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function addClass($class)
     {
-        if(is_array($class)){
+        if (is_array($class)) {
             $this->html_class = array_merge($this->html_class, $class);
         } else {
             $this->html_class[] = $class;
@@ -325,18 +338,42 @@ abstract class FieldHTML implements FieldInterface
     /**
      * Creates the ID for the html
      *
-     * @param int $id
+     * @param int $attrib
      * @return string
      */
-    public function createID( $id )
+    public function createAttribLoop($attrib)
     {
-        if($this->loop_support)
-        {
-           return $this->html_id = $id = $id  . "[{$this->ctr}]";
+        if ($this->loop_support) {
+            return $attrib = $attrib . "[{$this->ctr}]";
         }
 
-        return $id;
+        return $attrib;
     }
+
+    /**
+     * Loop support
+     *
+     * @param bool $loop_support
+     * @param int $ctr
+     * @return $this
+     */
+    public function loopSupport($loop_support = false, $ctr = 0)
+    {
+        $this->loop_support = $loop_support;
+
+        $this->ctr = $ctr;
+
+        $this->html_id = isset($this->options['html_id'])
+            ? $this->createAttribLoop($this->options['id'])
+            : $this->createAttribLoop($this->acf_default['wrapper']['id']);
+
+        $this->name = isset($this->options['name'])
+            ? $this->createAttribLoop($this->options['excerpt'])
+            : $this->createAttribLoop($this->acf_default['excerpt']);
+
+        return $this;
+    }
+
 
     /**
      * Set HTML ID
@@ -344,27 +381,13 @@ abstract class FieldHTML implements FieldInterface
      * @param $id
      * @return $this
      */
-    public function setHtmlID( $id )
+    public function setHtmlID($id)
     {
         $this->html_id = $id;
 
 
         return $this;
     }
-
-    public function loopSupport( $loop_support = false, $ctr = 0)
-    {
-        $this->loop_support = $loop_support;
-
-        $this->ctr = $ctr;
-
-        $this->html_id = isset($this->options['html_id'])
-            ? $this->createID($this->options['id'])
-            : $this->createID($this->acf_default['wrapper']['id']);
-
-        return $this;
-    }
-
 
     /**
      * map out the fields base object
@@ -374,13 +397,13 @@ abstract class FieldHTML implements FieldInterface
     public function map()
     {
         $defaults = [];
-        if(empty($this->field)) return false;
+        if (empty($this->field)) return false;
 
-        foreach($this->field as $key => $value) {
-            if($key <> "content") {
+        foreach ($this->field as $key => $value) {
+            if ($key <> "content") {
                 $defaults[$key] = $value;
             } else {
-                foreach($value as $content_key => $content_value) {
+                foreach ($value as $content_key => $content_value) {
                     $defaults[$content_key] = $content_value;
                 }
             }
@@ -409,9 +432,12 @@ abstract class FieldHTML implements FieldInterface
         $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
 
         $this->html_id = isset($this->options['html_id'])
-            ? $this->createID($this->options['id'])
-            : $this->createID($this->acf_default['wrapper']['id']);
+            ? $this->createAttribLoop($this->options['id'])
+            : $this->createAttribLoop($this->acf_default['wrapper']['id']);
 
+        $this->name = isset($this->options['name'])
+            ? $this->createAttribLoop($this->options['excerpt'])
+            : $this->createAttribLoop($this->acf_default['excerpt']);
 
     }
 
@@ -445,7 +471,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function __set($name, $value)
     {
-        if(property_exists($this, $name)) {
+        if (property_exists($this, $name)) {
             $this->fillable[$name] = $value;
         } else {
             $this->$name = $value;
@@ -470,7 +496,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function addChoices($key, $choice)
     {
-        if(is_array($key)) {
+        if (is_array($key)) {
             $this->choices = array_merge($this->choices, $key);
         } else {
             $this->choices[$key] = $choice;

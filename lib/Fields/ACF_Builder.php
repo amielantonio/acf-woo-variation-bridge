@@ -29,9 +29,18 @@ class ACF_Builder
      */
     private $type = "text";
 
-
+    /**
+     * Boolean for loop support
+     *
+     * @var bool
+     */
     private $loop_support = false;
 
+    /**
+     * add ctr
+     *
+     * @var int | null
+     */
     private $ctr;
 
     /**
@@ -205,7 +214,7 @@ class ACF_Builder
             'wysiwyg' => 'Wysiwyg',
             'select' => 'Select',
             'checkbox' => 'Checkbox',
-            'raio_button' => 'RadioButton',
+            'radio_button' => 'RadioButton',
             'true_false'=> 'TrueFalse',
             'link' => 'Link',
             'post_object' => 'PostObject',
