@@ -2,8 +2,6 @@
 
 namespace ACFBridge\Fields\Basic;
 
-use ACFBridge\Fields\Basic\ACF_Text;
-
 class ACF_Email extends ACF_Text {
 
     /**

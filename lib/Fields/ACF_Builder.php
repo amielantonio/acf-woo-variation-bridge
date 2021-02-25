@@ -22,16 +22,32 @@ class ACF_Builder
      */
     private $field;
 
+    /**
+     * Defaults to type text
+     *
+     * @var string
+     */
     private $type = "text";
 
+
+    private $loop_support = false;
+
+    private $ctr;
+
     /**
-     * ACFBuilder constructor.
+     * ACF_Builder constructor.
      *
      * @param array $field
+     * @param bool $loop_support
+     * @param int $ctr
      */
-    public function __construct($field = [])
+    public function __construct($field = [], $loop_support = false, $ctr = 0)
     {
         $this->field = $field;
+
+        $this->loop_support = $loop_support;
+
+        $this->ctr = $ctr;
     }
 
 
@@ -46,6 +62,7 @@ class ACF_Builder
     {
         $wd = !empty($field)  ? $field : $this->field;
 
+
         //reset($wd)['content']
         $this->type = $type = reset($wd)['content']['type'];
 
@@ -56,10 +73,9 @@ class ACF_Builder
         }
 
         if(method_exists($this, $method)) {
-            return $this->$method($field);
+            return $this->$method($wd);
         } else {
             throw new BuildException("Build Failed, cannot build the widget you are referring to");
-
         }
     }
 
@@ -74,59 +90,75 @@ class ACF_Builder
     {
         $textBuilder = new ACF_Text($field);
 
-        return $textBuilder->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
     public function buildTextArea($field)
     {
         $textAreaBuilder = new ACF_TextArea($field);
 
-        return $textAreaBuilder->render();
+        return $textAreaBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
     public function buildNumber($field)
     {
         $textBuilder = new ACF_Number($field);
 
-        return $textBuilder->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
     public function buildEmail($field)
     {
         $textBuilder = new ACF_Email($field);
 
-        return $textBuilder->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
     public function buildURL($field)
     {
         $textBuilder = new ACF_Text($field);
 
-        return $textBuilder->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
+    /**
+     * Build password
+     *
+     * @param $field
+     * @return string|void
+     */
     public function buildPassword($field)
     {
         $textBuilder = new ACF_Text($field, ["type" => "password"]);
 
-        return $textBuilder->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
+    /**
+     * Build date picker
+     *
+     * @param $field
+     * @return string|void
+     */
     public function buildDatePicker($field)
     {
         $datepickerBuilder = new ACF_DatePicker($field);
 
-        return $datepickerBuilder->render();
+        return $datepickerBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
+    /**
+     * Build Wysiwyg editor
+     *
+     * @param $field
+     * @return string|void
+     */
     public function buildWysiwyg($field)
     {
         $wysiwygBuilder = new ACF_Wysiwyg($field);
 
-        return $wysiwygBuilder->render();
+        return $wysiwygBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
-
-
 
     /**
      * Builds a dropdown widget
@@ -138,7 +170,7 @@ class ACF_Builder
     {
         $selectBuilder = new ACF_Select($field);
 
-        return $selectBuilder->render();
+        return $selectBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
     /**
@@ -151,7 +183,7 @@ class ACF_Builder
     {
         $postObjectBuilder = new ACF_PostObject($field);
 
-        return $postObjectBuilder->render();
+        return $postObjectBuilder->loopSupport($this->loop_support, $this->ctr)->render();
     }
 
 
@@ -173,7 +205,7 @@ class ACF_Builder
             'wysiwyg' => 'Wysiwyg',
             'select' => 'Select',
             'checkbox' => 'Checkbox',
-            'radio_button' => 'RadioButton',
+            'raio_button' => 'RadioButton',
             'true_false'=> 'TrueFalse',
             'link' => 'Link',
             'post_object' => 'PostObject',

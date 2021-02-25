@@ -15,9 +15,48 @@ class IntegrationMethods
      */
     public static $instance;
 
+    /**
+     * Field Group ID
+     *
+     * @var int | null
+     */
     public $field_group;
 
+    /**
+     * Field OD
+     *
+     * @var int | null
+     */
+    public $field_id;
+
+    /**
+     * Loop support for the widgets
+     *
+     * @var bool
+     */
     public $loop_support = false;
+
+    /**
+     * Loop support counter
+     *
+     * @var int
+     */
+    private $ctr = 0;
+
+    /**
+     * Contains the html id
+     *
+     * @var string
+     */
+    private $html_id;
+
+    /**
+     * Contains the html class
+     *
+     * @var array
+     */
+    private $html_class = [];
+
 
     /**
      * Initialize Class
@@ -42,21 +81,17 @@ class IntegrationMethods
     }
 
     /**
-     * Get the field group from ACF based on the ID given
+     * Set the field group from ACF based on the ID given
      *
      * @param $field_group_id
      * @return IntegrationMethods
      * @throws Exception
      */
-    public static function getFieldsFromGroup($field_group_id)
+    public static function setFieldGroup($field_group_id)
     {
         self::init();
 
         self::$instance->field_group = $field_group_id;
-
-        $factory = new ACF_Factory($field_group_id);
-
-        $factory->renderWidgets();
 
         return self::$instance->instance();
     }
@@ -72,34 +107,94 @@ class IntegrationMethods
     }
 
     /**
-     * Get the field based on the ID given
+     * Set the field based on the ID given
      *
      * @param $field_id
      * @return IntegrationMethods
      * @throws Exception
      */
-    public static function getFieldById($field_id)
+    public static function setFieldId($field_id)
     {
         self::init();
 
-        $factory = new ACF_Factory($field_id);
-
-        $factory->renderWidget($field_id);
+        self::$instance->field_id = $field_id;
 
         return self::$instance;
     }
 
-    public function addLoopingSupport( $bool = true )
+    /**
+     * Add support for this fields that are called inside a loop
+     *
+     * @param $ctr
+     * @return IntegrationMethods
+     */
+    public function addLoopingSupport( $ctr )
     {
-        $this->loop_support = $bool;
+        $this->loop_support = true;
+
+        $this->ctr = $ctr;
+
+        return $this->instance();
+    }
+
+    /**
+     * Sets the parent html ID
+     *
+     * @param $id
+     * @return $this
+     */
+    public function setParentHtmlID( $id )
+    {
+        $this->html_id = $id;
+
+        return $this->instance();
+    }
+
+    /**
+     * Add a class for the parent
+     *
+     * @param $class
+     * @return $this
+     */
+    public function addParentHtmlClass( $class )
+    {
+        if(is_array($class)){
+            $this->html_class = array_merge($this->html_class, $class);
+        } else {
+            $this->html_class[] = $class;
+        }
+
+        return $this->instance();
+    }
+
+    public function setParentHtmlClass( $class )
+    {
+        $this->html_class = $class;
 
         return $this->instance();
     }
 
 
-    public function render( ACF_Factory $factory)
+    /**
+     * Render the Widget created from the factory
+     *
+     * @throws Exception
+     */
+    public function render()
     {
-        $factory->renderWidgets();
+        if($this->field_group) {
+            $factory = new ACF_Factory($this->field_group, $this->loop_support, $this->ctr);
+
+            echo $factory->addParentHtmlClass($this->html_class)
+                ->setParentHtmlID($this->html_id)
+                ->renderWidgets();
+        } else {
+            $factory = new ACF_Factory(null, $this->loop_support, $this->ctr);
+
+            echo $factory->addParentHtmlClass($this->html_class)
+                ->setParentHtmlID($this->html_id)
+                ->renderWidget($this->field_id);
+        }
     }
 
 }

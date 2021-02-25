@@ -126,6 +126,10 @@ abstract class FieldHTML implements FieldInterface
 
    protected $options = [];
 
+   private $loop_support = false;
+
+   private $ctr = 0;
+
 
     /**
      * FieldHTML constructor.
@@ -163,9 +167,9 @@ abstract class FieldHTML implements FieldInterface
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
 
-        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} 
-                {$this->htmlInfo['required']} 
-                {$this->htmlInfo['value']} 
+        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']}
+                {$this->htmlInfo['required']}
+                {$this->htmlInfo['value']}
                 {$this->htmlInfo['disabled']}
             {$cHtml}
         ";
@@ -205,7 +209,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function render()
     {
-        echo $this->build();
+        return $this->build();
     }
 
     protected function html()
@@ -274,9 +278,15 @@ abstract class FieldHTML implements FieldInterface
         return "class='{$classes}' id='{$this->html_id}'{$width}";
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     protected function choices()
     {
         $html = "";
+
         foreach($this->choices as $key => $value) {
             $html .= "<option value='{$key}'>{$value}</option>";
         }
@@ -284,18 +294,83 @@ abstract class FieldHTML implements FieldInterface
         return $html;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     protected function is_multiple()
     {
         return $this->is_disabled > 0 ? "multiple='multiple'" : "";
     }
 
-
+    /**
+     * Add a class to the html
+     *
+     * @param $class
+     * @return $this
+     */
     public function addClass($class)
     {
-        $this->html_class[] = $class;
+        if(is_array($class)){
+            $this->html_class = array_merge($this->html_class, $class);
+        } else {
+            $this->html_class[] = $class;
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * Creates the ID for the html
+     *
+     * @param int $id
+     * @return string
+     */
+    public function createID( $id )
+    {
+        if($this->loop_support)
+        {
+           return $this->html_id = $id = $id  . "[{$this->ctr}]";
+        }
+
+        return $id;
+    }
+
+    /**
+     * Set HTML ID
+     *
+     * @param $id
+     * @return $this
+     */
+    public function setHtmlID( $id )
+    {
+        $this->html_id = $id;
+
+
+        return $this;
+    }
+
+    public function loopSupport( $loop_support = false, $ctr = 0)
+    {
+        $this->loop_support = $loop_support;
+
+        $this->ctr = $ctr;
+
+        $this->html_id = isset($this->options['html_id'])
+            ? $this->createID($this->options['id'])
+            : $this->createID($this->acf_default['wrapper']['id']);
+
+        return $this;
     }
 
 
+    /**
+     * map out the fields base object
+     *
+     * @return array|bool|mixed
+     */
     public function map()
     {
         $defaults = [];
@@ -333,7 +408,11 @@ abstract class FieldHTML implements FieldInterface
 
         $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
 
-        $this->html_id = isset($this->options['html_id']) ? $this->options['id'] : $this->acf_default['wrapper']['id'];
+        $this->html_id = isset($this->options['html_id'])
+            ? $this->createID($this->options['id'])
+            : $this->createID($this->acf_default['wrapper']['id']);
+
+
     }
 
     public function addScript()
@@ -373,10 +452,29 @@ abstract class FieldHTML implements FieldInterface
         }
     }
 
+    /**
+     * Set the choices for the dropdown
+     *
+     * @param $choices
+     */
     public function setChoices($choices)
     {
         $this->choices = $choices;
     }
 
+    /**
+     * add choices to the html
+     *
+     * @param $key
+     * @param $choice
+     */
+    public function addChoices($key, $choice)
+    {
+        if(is_array($key)) {
+            $this->choices = array_merge($this->choices, $key);
+        } else {
+            $this->choices[$key] = $choice;
+        }
+    }
 
 }

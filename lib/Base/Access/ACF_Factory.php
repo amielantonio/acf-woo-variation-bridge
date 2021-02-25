@@ -4,6 +4,7 @@ namespace ACFBridge\Base\Access;
 
 use ACFBridge\Fields\ACF_Builder;
 use Exception;
+use function simplehtmldom_1_5\dump_html_tree;
 
 class ACF_Factory
 {
@@ -23,13 +24,42 @@ class ACF_Factory
      */
     private $field_id;
 
+    /**
+     * check if the field should contain a loop or array support
+     *
+     * @var bool
+     */
+    private $loop_support = false;
+
+
+    /**
+     * Counter for the loop
+     *
+     * @var int
+     */
+    private $ctr;
+
+    /**
+     * ID of the parent HTML
+     *
+     * @var string
+     */
+    private $html_id;
+
+    /**
+     * Class of the parent HTML
+     *
+     * @var array
+     */
+    private $html_class = [];
+
 
     /**
      * Allowed Fields
      *
      * @var array
      */
-    private $allowedFields = [
+    private $supportedFields = [
         'text',
         'textarea',
         'number',
@@ -62,13 +92,19 @@ class ACF_Factory
     /**
      * ACF_Factory constructor.
      *
-     * @param $field_group_id
+     * @param bool $loop_support
+     * @param int | null $field_group_id
+     * @param int $ctr
      */
-    public function __construct( $field_group_id)
+    public function __construct( $field_group_id = null, $loop_support = false, $ctr = 0)
     {
         $this->field_group_id = $field_group_id;
-        $this->schema =  new ACF_Schema;
 
+        $this->loop_support = $loop_support;
+
+        $this->ctr = $ctr;
+
+        $this->schema =  new ACF_Schema;
 
     }
 
@@ -76,22 +112,24 @@ class ACF_Factory
      * Make widgets under that are under the field group
      *
      * @param $field_group_id
-     * @return bool
+     * @return bool | string
      * @throws Exception
      */
     public function makeWidgets( $field_group_id )
     {
-        $fieldGroupObj = (object) $this->getFieldGroupSchema( $field_group_id);
+        $fieldGroupObj = (object) $this->getFieldGroupSchema( $field_group_id );
+
+        $html = "";
 
         if( ! is_object($fieldGroupObj)) return false;
 
         foreach($fieldGroupObj as $fieldProperties ) {
             foreach($fieldProperties['fields'] as $field) {
-                $this->makeWidget($field);
+                $html .= $this->makeWidget($field);
             }
         }
 
-        return true;
+        return $html;
     }
 
     /**
@@ -105,7 +143,7 @@ class ACF_Factory
     {
         $field_group_id = $field_group_id <> "" ? $field_group_id : $this->field_group_id;
 
-        return $this->makeWidgets( $field_group_id );
+        return $this->makeParent($this->makeWidgets( $field_group_id ), true);
     }
 
     /**
@@ -121,8 +159,52 @@ class ACF_Factory
 
         $fieldObj = (object) $this->getFieldSchema($field_id);
 
-        return $this->makeWidget($fieldObj);
+        return $this->makeParent($this->makeWidget($fieldObj), true);
     }
+
+    /**
+     * Check to see if the widget should have a parent or not,
+     * depending on the place where it was called;
+     *
+     * @param $child
+     * @param bool $makeParent
+     * @return string
+     */
+    public function makeParent( $child, $makeParent = false )
+    {
+        if($makeParent)
+        {
+            $id = $this->html_id;
+            $class = implode(" ", $this->html_class);
+
+            return "<div class='bridge-parent $class' id='{$id}'>
+                        {$child}
+                    </div>";
+        }
+
+        return $child;
+
+    }
+
+    public function setParentHtmlID( $id )
+    {
+        $this->html_id = $id;
+
+        return $this;
+    }
+
+    public function addParentHtmlClass($class)
+    {
+        if(is_array($class)){
+            $this->html_class = array_merge($this->html_class, $class);
+        } else {
+            $this->html_class[] = $class;
+        }
+
+        return $this;
+    }
+
+
 
     /**
      *
@@ -132,7 +214,7 @@ class ACF_Factory
      */
     public function is_allowed($widget_type)
     {
-        return in_array($widget_type, $this->allowedFields);
+        return in_array($widget_type, $this->supportedFields);
     }
 
 
@@ -146,12 +228,13 @@ class ACF_Factory
     public function makeWidget( $field )
     {
         try {
-            $builder = new ACF_Builder;
-            return $builder->build($field);
+            $builder = new ACF_Builder($field, $this->loop_support, $this->ctr);
+            return $builder->build();
         } catch (Exception $e){
             echo $e;
         }
     }
+
 
     /**
      *
