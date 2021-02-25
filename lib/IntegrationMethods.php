@@ -15,6 +15,10 @@ class IntegrationMethods
      */
     public static $instance;
 
+    public $field_group;
+
+    public $loop_support = false;
+
     /**
      * Initialize Class
      */
@@ -38,6 +42,26 @@ class IntegrationMethods
     }
 
     /**
+     * Get the field group from ACF based on the ID given
+     *
+     * @param $field_group_id
+     * @return IntegrationMethods
+     * @throws Exception
+     */
+    public static function getFieldsFromGroup($field_group_id)
+    {
+        self::init();
+
+        self::$instance->field_group = $field_group_id;
+
+        $factory = new ACF_Factory($field_group_id);
+
+        $factory->renderWidgets();
+
+        return self::$instance->instance();
+    }
+
+    /**
      * return the instance of this class
      *
      * @return $this
@@ -45,21 +69,6 @@ class IntegrationMethods
     protected function instance()
     {
         return $this;
-    }
-
-    /**
-     * Get the field group from ACF based on the ID given
-     *
-     * @param $field_group_id
-     * @throws Exception
-     */
-    public static function getFieldsFromGroup($field_group_id)
-    {
-        self::init();
-
-        $factory = new ACF_Factory($field_group_id);
-
-        $factory->renderWidgets();
     }
 
     /**
@@ -80,9 +89,17 @@ class IntegrationMethods
         return self::$instance;
     }
 
-    public static function addLoopingSupport( $bool = true )
+    public function addLoopingSupport( $bool = true )
     {
+        $this->loop_support = $bool;
 
+        return $this->instance();
+    }
+
+
+    public function render( ACF_Factory $factory)
+    {
+        $factory->renderWidgets();
     }
 
 }

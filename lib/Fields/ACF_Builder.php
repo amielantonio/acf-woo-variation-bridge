@@ -8,8 +8,9 @@ use ACFBridge\Fields\Basic\ACF_Text;
 use ACFBridge\Fields\Basic\ACF_TextArea;
 use ACFBridge\Fields\Choice\ACF_Select;
 use ACFBridge\Fields\jQuery\ACF_DatePicker;
+use ACFBridge\Fields\jQuery\ACF_Wysiwyg;
 use ACFBridge\Fields\Relational\ACF_PostObject;
-use Exception;
+use BuildException;
 
 class ACF_Builder
 {
@@ -39,7 +40,7 @@ class ACF_Builder
      *
      * @param array | object $field
      * @return bool
-     * @throws Exception
+     * @throws BuildException
      */
     public function build( $field = [] )
     {
@@ -50,14 +51,15 @@ class ACF_Builder
 
         $method = "build" . $this->widgetLookup($type);
 
-        if (!$wd) {
+        if (!$wd && $this->widgetLookup($type)) {
             return false;
         }
 
         if(method_exists($this, $method)) {
             return $this->$method($field);
         } else {
-            throw new \Exception("Build Failed, cannot build the widget you are referring to");
+            throw new BuildException("Build Failed, cannot build the widget you are referring to");
+
         }
     }
 
@@ -117,6 +119,13 @@ class ACF_Builder
         return $datepickerBuilder->render();
     }
 
+    public function buildWysiwyg($field)
+    {
+        $wysiwygBuilder = new ACF_Wysiwyg($field);
+
+        return $wysiwygBuilder->render();
+    }
+
 
 
     /**
@@ -161,13 +170,14 @@ class ACF_Builder
             'email' => 'Email',
             'url' => 'URL',
             'password' => 'Password',
-            'wysiwyg_editor' => 'WEditor',
+            'wysiwyg' => 'Wysiwyg',
             'select' => 'Select',
             'checkbox' => 'Checkbox',
             'radio_button' => 'RadioButton',
             'true_false'=> 'TrueFalse',
             'link' => 'Link',
             'post_object' => 'PostObject',
+            'date_picker' => 'DatePicker'
         ];
 
         return $fields[$widget];
