@@ -3,6 +3,7 @@
 namespace ACFBridge\Base\Access;
 
 use ACFBridge\Fields\ACF_Builder;
+use ACFBridge\IntegrationMethods;
 use Exception;
 
 class ACF_Factory
@@ -30,7 +31,6 @@ class ACF_Factory
      */
     private $loop_support = false;
 
-
     /**
      * Counter for the loop
      *
@@ -53,7 +53,6 @@ class ACF_Factory
     private $html_class = [];
 
     private $dataAttributes = [];
-
 
     /**
      * Allowed Fields
@@ -93,20 +92,19 @@ class ACF_Factory
     /**
      * ACF_Factory constructor.
      *
-     * @param bool $loop_support
-     * @param int | null $field_group_id
-     * @param int $ctr
+     * @param IntegrationMethods $integration
      */
-    public function __construct($field_group_id = null, $loop_support = false, $ctr = 0)
+    public function __construct(IntegrationMethods $integration)
     {
-        $this->field_group_id = $field_group_id;
-
-        $this->loop_support = $loop_support;
-
-        $this->ctr = $ctr;
+        /*
+         * add the properties of the integration to factory
+         */
+        foreach($integration as $key => $value)
+        {
+            $this->$key = $value;
+        }
 
         $this->schema = new ACF_Schema;
-
     }
 
     /**

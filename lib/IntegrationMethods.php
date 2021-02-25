@@ -20,7 +20,7 @@ class IntegrationMethods
      *
      * @var int | null
      */
-    public $field_group;
+    public $field_group_id;
 
     /**
      * Field OD
@@ -41,28 +41,28 @@ class IntegrationMethods
      *
      * @var int
      */
-    private $ctr = 0;
+    public $ctr = 0;
 
     /**
      * Contains the html id
      *
      * @var string
      */
-    private $html_id;
+    public $html_id;
 
     /**
      * Contains the html class
      *
      * @var array
      */
-    private $html_class = [];
+    public $html_class = [];
 
     /**
      * Add Data attributes to parent HTML
      *
      * @var array
      */
-    private $dataAttributes = [];
+    public $dataAttributes = [];
 
 
     /**
@@ -98,7 +98,7 @@ class IntegrationMethods
     {
         self::init();
 
-        self::$instance->field_group = $field_group_id;
+        self::$instance->field_group_id = $field_group_id;
 
         return self::$instance->instance();
     }
@@ -213,20 +213,14 @@ class IntegrationMethods
      */
     public function render()
     {
-        if($this->field_group) {
-            $factory = new ACF_Factory($this->field_group, $this->loop_support, $this->ctr);
+        if($this->field_group_id) {
+            $factory = new ACF_Factory($this);
 
-            echo $factory->addParentHtmlClass($this->html_class)
-                ->setParentHtmlID($this->html_id)
-                ->addDataAttributes($this->dataAttributes)
-                ->renderWidgets();
+            echo $factory->renderWidgets();
         } else {
-            $factory = new ACF_Factory(null, $this->loop_support, $this->ctr);
+            $factory = new ACF_Factory($this);
 
-            echo $factory->addParentHtmlClass($this->html_class)
-                ->setParentHtmlID($this->html_id)
-                ->addDataAttributes($this->dataAttributes)
-                ->renderWidget($this->field_id);
+            echo $factory->renderWidget($this->field_id);
         }
     }
 
