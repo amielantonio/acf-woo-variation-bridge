@@ -12,7 +12,7 @@ This project aims to simplify adding of details inside the fields and removing t
 ```
 CourseACFIntegration::init();
 ```
-
+---
 ### Output the Field Group
 
 Set the field group inside the integration, then call on the `render()` function to show the output
@@ -21,7 +21,7 @@ Set the field group inside the integration, then call on the `render()` function
 ```
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->render();
 ```
-
+---
 ### Output a Field
 
 Set the field inside the integration, then call on `render()` function to show the field's HTML
@@ -31,7 +31,7 @@ Set the field inside the integration, then call on `render()` function to show t
 ```
 CourseACFIntegration::setFieldId( $fieldID )->render();
 ```
-
+---
 ### Add support for loops
 
 The loop support should be added when adding the integration inside a loop,
@@ -45,10 +45,13 @@ The loop support should be added when adding the integration inside a loop,
 // Field Group looping support
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->addLoopingSupport( $ctr = 0 )->render();
 
+
+
+
 // Field looping support
 CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->render();
 ```
-
+---
 ### Add or Set parent HTML class
 
 `$class` 
@@ -59,14 +62,21 @@ CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->ren
 // Field Group looping support
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->addParentHtmlClass( $class )->render();
 
+
+
+
 // Field looping support with class
 // -------------------------------------------
 // The set method should be used inside a loop, 
 // since the class would add up per loop instead of a single clas
 // inside the parent class
-CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->setParentHtmlClass( $class )->render();
-```
 
+CourseACFIntegration::setFieldId( $fieldID )
+                      ->addLoopingSupport( $ctr = 0 )
+                      ->setParentHtmlClass( $class )
+                      ->render();
+```
+---
 ### Add Data attributes to the HTML
 
 `$key` 
@@ -80,17 +90,23 @@ CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->set
 // Add a single data attribute to the parent html
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->addDataAttribute( $key, $value )->render();
 
+
+
+
 // Add multiple data attribute to the parent html
 CourseACFIntegration::setFieldId( $fieldID )
                       ->addDataAttribute( $key1, $value1 )
                       ->addDataAttribute( $key2, $value2 )
                       ->render();
+                  
+                  
+
                       
 // or pass it via an array
-$dataAttributes = [
-                    "key1" => "value1",
-                    "key2" => "value2",
-                  ]
+$dataAttributes = [ "key1" => "value1",
+                    "key2" => "value2" ];
+                  
+                  
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->addDataAttribute( $dataAttributes )->render();
 ```
 
