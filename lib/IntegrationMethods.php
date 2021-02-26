@@ -64,6 +64,29 @@ class IntegrationMethods
      */
     public $dataAttributes = [];
 
+    /**
+     * Allowed Fields
+     *
+     * @var array
+     */
+    private $supportedFields = [
+        'text',
+        'textarea',
+        'number',
+        'email',
+        'url',
+        'password',
+        'wysiwyg_editor',
+        'select',
+        'checkbox',
+        'radio_button',
+        'true_false',
+        'link',
+        'post_object',
+    ];
+
+
+
 
     /**
      * Initialize Class

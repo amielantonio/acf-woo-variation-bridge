@@ -174,8 +174,9 @@ abstract class FieldHTML implements FieldInterface
         $this->htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
+        $dataAttributes = $this->dataAttributes;
 
-        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} {$this->htmlInfo['name']}
+        $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} {$this->htmlInfo['name']} {$dataAttributes}
                 {$this->htmlInfo['required']}
                 {$this->htmlInfo['value']}
                 {$this->htmlInfo['disabled']}
@@ -220,6 +221,11 @@ abstract class FieldHTML implements FieldInterface
         return $this->build();
     }
 
+    /**
+     *  HTML
+     *
+     * @return array
+     */
     protected function html()
     {
         return [
@@ -315,6 +321,46 @@ abstract class FieldHTML implements FieldInterface
     protected function is_multiple()
     {
         return $this->is_disabled > 0 ? "multiple='multiple'" : "";
+    }
+
+    /**
+     * Add data attribute support
+     *
+     * @param $key
+     * @param string $value
+     * @return $this
+     */
+    public function addDataAttribute($key, $value = "")
+    {
+        if(is_array($key)){
+            $this->dataAttributes = array_merge($this->dataAttributes, $key);
+        } else {
+            $this->dataAttributes[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Create the html format of the data attribute
+     *
+     * @return string
+     */
+    private function createDataAttributesHTML()
+    {
+        $html = "";
+
+        /*
+         * Make sure that we wont be returning any
+         * random html code when data attribute is empty
+         */
+        if (!empty($this->dataAttributes)) {
+            foreach ($this->dataAttributes as $key => $attribute) {
+                $html .= "data-{$key}='{$attribute}'";
+            }
+
+            return $html;
+        }
     }
 
     /**
@@ -419,7 +465,6 @@ abstract class FieldHTML implements FieldInterface
     public function fill()
     {
         $this->label = isset($this->options['label']) ? $this->options['label'] : $this->acf_default['field_title'];
-        $this->excerpt = isset($this->options['excerpt']) ? $this->options['excerpt'] : $this->acf_default['excerpt'];
         $this->fieldType = isset($this->options['type']) ? $this->options['type'] : $this->acf_default['type'];
         $this->description = isset($this->options['description']) ? $this->options['description'] : $this->acf_default['instructions'];
         $this->is_required = isset($this->options['required']) ? $this->options['required'] : $this->acf_default['required'];

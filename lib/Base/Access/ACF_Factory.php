@@ -54,26 +54,7 @@ class ACF_Factory
 
     private $dataAttributes = [];
 
-    /**
-     * Allowed Fields
-     *
-     * @var array
-     */
-    private $supportedFields = [
-        'text',
-        'textarea',
-        'number',
-        'email',
-        'url',
-        'password',
-        'wysiwyg_editor',
-        'select',
-        'checkbox',
-        'radio_button',
-        'true_false',
-        'link',
-        'post_object',
-    ];
+    private $attributes = [];
 
     /**
      * ACF Schema
@@ -186,54 +167,6 @@ class ACF_Factory
     }
 
     /**
-     * Set the parent HTML ID
-     *
-     * @param $id
-     * @return $this
-     */
-    public function setParentHtmlID($id)
-    {
-        $this->html_id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Add a parent html class to the existing classes
-     *
-     * @param $class
-     * @return $this
-     */
-    public function addParentHtmlClass($class)
-    {
-        if (is_array($class)) {
-            $this->html_class = array_merge($this->html_class, $class);
-        } else {
-            $this->html_class[] = $class;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add html data attributes
-     *
-     * @param $key
-     * @param string $value
-     * @return $this
-     */
-    public function addDataAttributes($key, $value = "")
-    {
-        if(is_array($key)){
-            $this->dataAttributes = array_merge($this->dataAttributes, $key);
-        } else {
-            $this->dataAttributes[$key] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
      * Create the html format of the data attribute
      *
      * @return string
@@ -258,17 +191,6 @@ class ACF_Factory
     }
 
     /**
-     * check if the widget that is trying to be created is currently supported by the library
-     *
-     * @param $widget_type
-     * @return bool
-     */
-    public function is_allowed($widget_type)
-    {
-        return in_array($widget_type, $this->supportedFields);
-    }
-
-    /**
      * Call the build process
      *
      * @param $field
@@ -278,7 +200,12 @@ class ACF_Factory
     public function makeWidget($field)
     {
         try {
-            $builder = new ACF_Builder($field, $this->loop_support, $this->ctr);
+
+            $options['options'] = [
+                "loop_support" => $this->loop_support,
+                "ctr" => $this->ctr
+            ];
+            $builder = new ACF_Builder($field, $options);
             return $builder->build();
         } catch (Exception $e) {
             echo $e;

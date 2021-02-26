@@ -43,20 +43,27 @@ class ACF_Builder
      */
     private $ctr;
 
+    private $attributes;
+
+    private $options;
+
     /**
      * ACF_Builder constructor.
      *
      * @param array $field
-     * @param bool $loop_support
+     * @param array $attributes
+     * @param array $options
      * @param int $ctr
      */
-    public function __construct($field = [], $loop_support = false, $ctr = 0)
+    public function __construct($field = [], $options = [])
     {
         $this->field = $field;
 
-        $this->loop_support = $loop_support;
+        $this->options = $options;
 
-        $this->ctr = $ctr;
+        $this->loop_support = isset($options["loop_support"]) ?  $options['loop_support'] : false;
+
+        $this->ctr = isset($options['ctr']) ? $options['ctr'] : false;
     }
 
 
