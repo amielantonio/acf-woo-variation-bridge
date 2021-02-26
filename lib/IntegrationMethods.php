@@ -155,10 +155,10 @@ class IntegrationMethods
     /**
      * Add support for this fields that are called inside a loop
      *
-     * @param $ctr
+     * @param int $ctr
      * @return IntegrationMethods
      */
-    public function addLoopingSupport( $ctr )
+    public function addLoopingSupport( $ctr = 0 )
     {
         $this->loop_support = true;
 
