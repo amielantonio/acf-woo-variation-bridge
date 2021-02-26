@@ -10,7 +10,7 @@ This project aims to simplify adding of details inside the fields and removing t
 ### Instantiate the Integration
 > already called inside the other methods, so we don't need to call it when calling a certain method below
 ```
-CourseACFIntegration::init();
+<span style="color:#00B1CD">CourseACFIntegration</span>::init();
 ```
 ---
 ### Output the Field Group
@@ -19,7 +19,7 @@ Set the field group inside the integration, then call on the `render()` function
 `$fieldGroupID`
 : The ID of a specific field group in ACF
 ```
-CourseACFIntegration::setFieldGroup( $fieldGroupID )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldGroup( $fieldGroupID )->render();
 ```
 ---
 ### Output a Field
@@ -29,7 +29,7 @@ Set the field inside the integration, then call on `render()` function to show t
 `$fieldID`
 : The ID of a specific field in ACF
 ```
-CourseACFIntegration::setFieldId( $fieldID )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldId( $fieldID )->render();
 ```
 ---
 ### Add support for loops
@@ -43,13 +43,13 @@ The loop support should be added when adding the integration inside a loop,
  > Defaults index is 0
 ```
 // Field Group looping support
-CourseACFIntegration::setFieldGroup( $fieldGroupID )->addLoopingSupport( $ctr = 0 )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldGroup( $fieldGroupID )->addLoopingSupport( $ctr = 0 )->render();
 
 
 
 
 // Field looping support
-CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->render();
 ```
 ---
 ### Add or Set parent HTML class
@@ -60,7 +60,7 @@ CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->ren
 
 ```
 // Field Group looping support
-CourseACFIntegration::setFieldGroup( $fieldGroupID )->addParentHtmlClass( $class )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldGroup( $fieldGroupID )->addParentHtmlClass( $class )->render();
 
 
 
@@ -71,7 +71,7 @@ CourseACFIntegration::setFieldGroup( $fieldGroupID )->addParentHtmlClass( $class
 // since the class would add up per loop instead of a single clas
 // inside the parent class
 
-CourseACFIntegration::setFieldId( $fieldID )
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldId( $fieldID )
                       ->addLoopingSupport( $ctr = 0 )
                       ->setParentHtmlClass( $class )
                       ->render();
@@ -88,13 +88,13 @@ CourseACFIntegration::setFieldId( $fieldID )
  
 ```
 // Add a single data attribute to the parent html
-CourseACFIntegration::setFieldGroup( $fieldGroupID )->addDataAttribute( $key, $value )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldGroup( $fieldGroupID )->addDataAttribute( $key, $value )->render();
 
 
 
 
 // Add multiple data attribute to the parent html
-CourseACFIntegration::setFieldId( $fieldID )
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldId( $fieldID )
                       ->addDataAttribute( $key1, $value1 )
                       ->addDataAttribute( $key2, $value2 )
                       ->render();
@@ -107,7 +107,7 @@ $dataAttributes = [ "key1" => "value1",
                     "key2" => "value2" ];
                   
                   
-CourseACFIntegration::setFieldGroup( $fieldGroupID )->addDataAttribute( $dataAttributes )->render();
+<span style="color:#00B1CD">CourseACFIntegration</span>::setFieldGroup( $fieldGroupID )->addDataAttribute( $dataAttributes )->render();
 ```
 
 
