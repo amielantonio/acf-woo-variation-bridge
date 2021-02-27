@@ -37,6 +37,13 @@ class ACF_Builder
     private $loop_support = false;
 
     /**
+     * Post ID
+     *
+     * @var int
+     */
+    private $post_id;
+
+    /**
      * add ctr
      *
      * @var int | null
@@ -45,25 +52,30 @@ class ACF_Builder
 
     private $attributes;
 
+    /**
+     * Widget options
+     *
+     * @var mixed
+     */
     private $options;
 
     /**
      * ACF_Builder constructor.
      *
      * @param array $field
-     * @param array $attributes
      * @param array $options
-     * @param int $ctr
      */
     public function __construct($field = [], $options = [])
     {
         $this->field = $field;
 
-        $this->options = $options;
+        $this->options = $options['options'];
 
-        $this->loop_support = isset($options["loop_support"]) ?  $options['loop_support'] : false;
+        $this->loop_support = isset($options['options']["loop_support"]) ?  $options['options']['loop_support'] : false;
 
-        $this->ctr = isset($options['ctr']) ? $options['ctr'] : false;
+        $this->ctr = isset($options['options']['ctr']) ? $options['options']['ctr'] : false;
+
+        $this->post_id = isset($options['options']['post_id']) ? $options['options']['post_id'] : "";
     }
 
 
@@ -106,35 +118,37 @@ class ACF_Builder
     {
         $textBuilder = new ACF_Text($field);
 
-        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     public function buildTextArea($field)
     {
         $textAreaBuilder = new ACF_TextArea($field);
 
-        return $textAreaBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        var_dump($field);
+
+        return $textAreaBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     public function buildNumber($field)
     {
         $textBuilder = new ACF_Number($field);
 
-        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     public function buildEmail($field)
     {
         $textBuilder = new ACF_Email($field);
 
-        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     public function buildURL($field)
     {
         $textBuilder = new ACF_Text($field);
 
-        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     /**
@@ -147,7 +161,7 @@ class ACF_Builder
     {
         $textBuilder = new ACF_Text($field, ["type" => "password"]);
 
-        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $textBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     /**
@@ -160,7 +174,7 @@ class ACF_Builder
     {
         $datepickerBuilder = new ACF_DatePicker($field);
 
-        return $datepickerBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $datepickerBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     /**
@@ -173,7 +187,7 @@ class ACF_Builder
     {
         $wysiwygBuilder = new ACF_Wysiwyg($field);
 
-        return $wysiwygBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $wysiwygBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     /**
@@ -186,7 +200,7 @@ class ACF_Builder
     {
         $selectBuilder = new ACF_Select($field);
 
-        return $selectBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $selectBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
     /**
@@ -199,7 +213,7 @@ class ACF_Builder
     {
         $postObjectBuilder = new ACF_PostObject($field);
 
-        return $postObjectBuilder->loopSupport($this->loop_support, $this->ctr)->render();
+        return $postObjectBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
 

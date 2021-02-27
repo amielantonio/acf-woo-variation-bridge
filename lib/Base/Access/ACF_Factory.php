@@ -25,6 +25,13 @@ class ACF_Factory
     private $field_id;
 
     /**
+     * Post ID
+     *
+     * @var int
+     */
+    private $postID;
+
+    /**
      * check if the field should contain a loop or array support
      *
      * @var bool
@@ -203,8 +210,10 @@ class ACF_Factory
 
             $options['options'] = [
                 "loop_support" => $this->loop_support,
-                "ctr" => $this->ctr
+                "ctr" => $this->ctr,
+                "post_id" => $this->postID
             ];
+
             $builder = new ACF_Builder($field, $options);
             return $builder->build();
         } catch (Exception $e) {

@@ -26,6 +26,13 @@ abstract class FieldHTML implements FieldInterface
     protected $fieldType;
 
     /**
+     * Post ID
+     *
+     * @var int
+     */
+    protected $post_id;
+
+    /**
      * The field name
      *
      * @var
@@ -59,6 +66,14 @@ abstract class FieldHTML implements FieldInterface
      * @var string | int
      */
     protected $defaultValue;
+
+    /**
+     * The html value that should be rendered. This value can be the default Value or the
+     * value that was from the database.
+     *
+     * @var string | int
+     */
+    protected $html_value;
 
     /**
      * If the form is required by default
@@ -174,7 +189,7 @@ abstract class FieldHTML implements FieldInterface
         $this->htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
-        $dataAttributes = $this->dataAttributes;
+        $dataAttributes = $this->createDataAttributesHTML();
 
         $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} {$this->htmlInfo['name']} {$dataAttributes}
                 {$this->htmlInfo['required']}
@@ -218,6 +233,8 @@ abstract class FieldHTML implements FieldInterface
      */
     public function render()
     {
+        $this->html_value = $this->getValue();
+
         return $this->build();
     }
 
@@ -234,9 +251,10 @@ abstract class FieldHTML implements FieldInterface
             "wrappers" => $this->wrappers(),
             "placeholder" => $this->placeholderHTML(),
             "required" => $this->requiredHTML(),
-            "value" => $this->defaultValueHTML(),
+            "value" => $this->valueHTML(),
             "disabled" => $this->disabledHTML(),
             "multiple" => $this->is_multiple(),
+            "data_attributes" => $this->createDataAttributesHTML(),
         ];
     }
 
@@ -250,32 +268,73 @@ abstract class FieldHTML implements FieldInterface
         return $this->fieldType <> "" ? "type='{$this->fieldType}'" : "type='text'";
     }
 
+    /**
+     * Get default value html
+     *
+     * @return string
+     */
     protected function defaultValueHTML()
     {
         return $this->defaultValue <> "" ? "value='{$this->defaultValue}'" : "";
     }
 
-
-    protected function getValue($id)
+    /**
+     * Value HTML that gets the post meta value or the default value.
+     *
+     * @return string
+     */
+    protected function valueHTML()
     {
-
+        return "value='{$this->html_value}'";
     }
 
+    /**
+     * Get the value of the value attribute of the field
+     */
+    protected function getValue()
+    {
+        $dbValue = get_post_meta($this->post_id, $this->name)[0];
+        $defaultValue = $this->defaultValue;
+
+        return isset($dbValue) && $dbValue <> "" ? $dbValue : $defaultValue;
+    }
+
+
+    /**
+     * Create HTML for the name attribute
+     *
+     * @return string
+     */
     protected function nameHTML()
     {
         return $this->name <> "" ? "name='{$this->name}'" : "";
     }
 
+    /**
+     * Create HTML for the placeholder attribute
+     *
+     * @return string
+     */
     protected function placeholderHTML()
     {
         return $this->placeholder <> "" ? "placeholder='{$this->placeholder}'" : "";
     }
 
+    /**
+     * Create HTML for the required attribute
+     *
+     * @return string
+     */
     protected function requiredHTML()
     {
         return $this->is_required > 0 ? "required='required'" : "";
     }
 
+    /**
+     * Create HTML for the disabled HTML
+     *
+     * @return string
+     */
     protected function disabledHTML()
     {
         return $this->is_disabled > 0 ? "disabled='disabled'" : "";
@@ -382,6 +441,28 @@ abstract class FieldHTML implements FieldInterface
     }
 
     /**
+     * Add the post ID inside the widget
+     *
+     * @param $post_id
+     * @return $this
+     */
+    public function post($post_id)
+    {
+        $this->post_id = $post_id;
+
+        /*
+         * Add data attribute to the post ID.
+         * This will allow users to add more
+         * options and customization in the frontend
+         * or javascript.
+         */
+        $this->addDataAttribute('post_id', $post_id);
+
+        return $this;
+    }
+
+
+    /**
      * Creates the ID for the html
      *
      * @param int $attrib
@@ -484,6 +565,7 @@ abstract class FieldHTML implements FieldInterface
             ? $this->createAttribLoop($this->options['excerpt'])
             : $this->createAttribLoop($this->acf_default['excerpt']);
 
+        $this->html_value = $this->getValue();
     }
 
     public function addScript()

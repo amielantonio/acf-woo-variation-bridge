@@ -29,6 +29,14 @@ class IntegrationMethods
      */
     public $field_id;
 
+
+    /**
+     * Post id where to get the post meta
+     *
+     * @var int
+     */
+    public $postID;
+
     /**
      * Loop support for the widgets
      *
@@ -84,7 +92,6 @@ class IntegrationMethods
         'link',
         'post_object',
     ];
-
 
 
 
@@ -163,6 +170,19 @@ class IntegrationMethods
         $this->loop_support = true;
 
         $this->ctr = $ctr;
+
+        return $this->instance();
+    }
+
+    /**
+     * Add post to the integration
+     *
+     * @param $post_id
+     * @return IntegrationMethods
+     */
+    public function post( $post_id )
+    {
+        $this->postID = $post_id;
 
         return $this->instance();
     }
