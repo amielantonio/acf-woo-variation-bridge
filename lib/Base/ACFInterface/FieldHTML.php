@@ -163,10 +163,13 @@ abstract class FieldHTML implements FieldInterface
      */
     public function __construct($field, $options = [])
     {
+        global $post;
         $this->field = reset($field);
         $this->options = $options;
         $this->acf_default = $this->map();
         $this->fill();
+
+        $this->post_id = $post;
     }
 
     /**
@@ -448,6 +451,8 @@ abstract class FieldHTML implements FieldInterface
      */
     public function post($post_id)
     {
+
+
         $this->post_id = $post_id;
 
         /*
