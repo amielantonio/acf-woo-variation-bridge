@@ -155,7 +155,7 @@ class ACF_Builder
      * Build password
      *
      * @param $field
-     * @return string|void
+     * @return string
      */
     public function buildPassword($field)
     {
@@ -168,7 +168,7 @@ class ACF_Builder
      * Build date picker
      *
      * @param $field
-     * @return string|void
+     * @return string
      */
     public function buildDatePicker($field)
     {
@@ -181,7 +181,7 @@ class ACF_Builder
      * Build Wysiwyg editor
      *
      * @param $field
-     * @return string|void
+     * @return string
      */
     public function buildWysiwyg($field)
     {

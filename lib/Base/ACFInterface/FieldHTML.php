@@ -217,16 +217,43 @@ abstract class FieldHTML implements FieldInterface
         $label = $this->label;
         $description = $this->description;
         $descriptionHTML = $description <> "" ? "<span>$description</span>" : "";
+        $requiredHTML = $this->buildRequiredHTML();
 
         return "{$opening}
                     <div class='bridge-label'>
-                        <label>{$label}</label>
+                        <label>{$label} {$requiredHTML}</label>
                         {$descriptionHTML}
                     </div>
                     <div class='bridge-input'>
                         {$childHTML}
                     </div>
                 {$closing}";
+    }
+
+    /**
+     * Build the required html
+     *
+     * @return string
+     */
+    public function buildRequiredHTML()
+    {
+        if(!$this->is_required){
+            return "";
+        }
+
+        return "<span class='bridge-required'>*</span>";
+    }
+
+
+
+    public function buildSuffixHTML()
+    {
+
+    }
+
+    public function buildPrefixHTML()
+    {
+
     }
 
     /**
