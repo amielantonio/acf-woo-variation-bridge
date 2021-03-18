@@ -145,13 +145,35 @@ abstract class FieldHTML implements FieldInterface
      */
     protected $attributes = [];
 
+    /**
+     * HTML Data attributes
+     *
+     * @var array
+     */
     protected $dataAttributes = [];
 
+    /**
+     *
+     *
+     * @var array
+     */
     protected $options = [];
 
+    /**
+     * Loop support for widgets that has an array as the name
+     *
+     * @var bool
+     */
     private $loop_support = false;
 
+    /**
+     * counter for the loop that defaults to 0
+     *
+     * @var int
+     */
     private $ctr = 0;
+
+    protected $baseClass;
 
 
     /**
@@ -212,7 +234,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function buildWrapper($childHTML)
     {
-        $opening = "<div>";
+        $opening = "<div class='bridge-widget'>";
         $closing = "</div>";
         $label = $this->label;
         $description = $this->description;
@@ -224,7 +246,7 @@ abstract class FieldHTML implements FieldInterface
                         <label>{$label} {$requiredHTML}</label>
                         {$descriptionHTML}
                     </div>
-                    <div class='bridge-input'>
+                    <div class='bridge-input {$this->baseClass}'>
                         {$childHTML}
                     </div>
                 {$closing}";

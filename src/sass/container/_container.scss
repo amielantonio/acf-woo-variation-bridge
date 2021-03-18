@@ -1,0 +1,22 @@
+.bridge-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.bridge-row-wrap {
+  @extend .bridge-row;
+  flex-wrap: wrap;
+}
+
+.bridge-column {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.bridge-column-wrap {
+  @extend .bridge-column;
+  flex-wrap: wrap;
+}

@@ -93,7 +93,24 @@ class IntegrationMethods
         'post_object',
     ];
 
+    /**
+     * Parent element formatting CSS
+     *
+     * @var
+     */
+    private $format;
 
+    /**
+     * Inline CSS style
+     *
+     * @var string;
+     */
+    private $style;
+
+    public function __construct()
+    {
+        add_action('admin_enqueue_scripts', array(__CLASS__, 'scripts'));
+    }
 
     /**
      * Initialize Class
@@ -107,6 +124,7 @@ class IntegrationMethods
 
         self::$instance->autoload();
 
+
     }
 
     /**
@@ -115,6 +133,11 @@ class IntegrationMethods
     private function autoload()
     {
         require_once __DIR__ . '/../vendor/autoload.php';
+    }
+
+    public function scripts()
+    {
+
     }
 
     /**
@@ -228,6 +251,49 @@ class IntegrationMethods
         $this->html_class = $class;
 
         return $this->instance();
+    }
+
+    /**
+     * Formats the parent element of the form group
+     *
+     * @param $format
+     * @return $this
+     */
+    public function format( $format )
+    {
+        $acceptedFormats = [
+            'row'           => 'bridge-row',
+            'column'        => 'bridge-column',
+            'row wrap'      => 'bridge-row-wrap',
+            'column wrap'   => 'bridge-column-wrap',
+        ];
+
+        /*
+         * Checks whether the specified format of the user is
+         * available within the key settings of our integration
+         *
+         * if the format is accepted, register the corresponding
+         * css class.
+         */
+        if(in_array($format, array_keys($acceptedFormats))){
+            $this->format = $format;
+            $this->html_class[] = $acceptedFormats[$format];
+        }
+
+        /*
+         * If the submitted format is an array, we can conclude
+         * that the submitted format is a css configuration, so
+         * we will register it under the style config.
+         */
+        if(is_array($format)){
+            foreach($format as $key => $value) {
+                $this->style .= "{$key}: {$value};";
+            }
+        }
+
+
+
+        return $this;
     }
 
     /**

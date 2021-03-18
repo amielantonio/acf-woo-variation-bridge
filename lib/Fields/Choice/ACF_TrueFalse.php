@@ -37,6 +37,8 @@ class ACF_TrueFalse extends FieldHTML
         "choices" => []
     ];
 
+    protected $baseClass = "bridge-switch-container";
+
 
 
     public function __construct($field, array $options = [])
@@ -49,12 +51,12 @@ class ACF_TrueFalse extends FieldHTML
         $htmlInfo = $this->html();
 
         $html = "<input type='hidden' {$htmlInfo['name']} value='0'>
-                 <div>
-                    <div>
+                 <div class='bridge-switch'>
+                    <div class='bridge-switch__checkbox'>
                         <input type='checkbox' {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']}>
                     </div>
-                    <div class=''>
-                        <span></span>
+                    <div class='bridge-switch__slider'>
+                        <span class='slider'></span>
                     </div>
                 </div>";
 
