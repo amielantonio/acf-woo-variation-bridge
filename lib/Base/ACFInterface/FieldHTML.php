@@ -216,7 +216,7 @@ abstract class FieldHTML implements FieldInterface
         $closing = "</div>";
         $label = $this->label;
         $description = $this->description;
-        $descriptionHTML = $description <> "" ? "<span>$description</span>" : "";
+        $descriptionHTML = $description <> "" ? "<br /><span>$description</span>" : "";
         $requiredHTML = $this->buildRequiredHTML();
 
         return "{$opening}

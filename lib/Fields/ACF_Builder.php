@@ -7,6 +7,7 @@ use ACFBridge\Fields\Basic\ACF_Number;
 use ACFBridge\Fields\Basic\ACF_Text;
 use ACFBridge\Fields\Basic\ACF_TextArea;
 use ACFBridge\Fields\Choice\ACF_Select;
+use ACFBridge\Fields\Choice\ACF_TrueFalse;
 use ACFBridge\Fields\jQuery\ACF_DatePicker;
 use ACFBridge\Fields\jQuery\ACF_Wysiwyg;
 use ACFBridge\Fields\Relational\ACF_PostObject;
@@ -125,8 +126,6 @@ class ACF_Builder
     {
         $textAreaBuilder = new ACF_TextArea($field);
 
-        var_dump($field);
-
         return $textAreaBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
@@ -214,6 +213,19 @@ class ACF_Builder
         $postObjectBuilder = new ACF_PostObject($field);
 
         return $postObjectBuilder->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
+    }
+
+    /**
+     * Build a dropdown with posts as choices
+     *
+     * @param $field
+     * @return string
+     */
+    public function buildTrueFalse($field)
+    {
+        $trueFalse = new ACF_TrueFalse($field);
+
+        return $trueFalse->loopSupport($this->loop_support, $this->ctr)->post($this->post_id)->render();
     }
 
 
