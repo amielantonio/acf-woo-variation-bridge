@@ -20,3 +20,19 @@
   @extend .bridge-column;
   flex-wrap: wrap;
 }
+
+.fit-1 > .bridge-widget{
+  flex-basis: 100%;
+}
+
+.fit-2 > .bridge-widget {
+  flex-basis: 50%;
+}
+
+.fit-3 > .bridge-widget {
+  flex-basis: 33.33%;
+}
+
+.fit-4 > .bridge-widget {
+  flex-basis: 25%;
+}

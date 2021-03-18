@@ -101,6 +101,13 @@ class IntegrationMethods
     private $format;
 
     /**
+     * Specifies the number of items inside the row;
+     *
+     * @var
+     */
+    private $fit;
+
+    /**
      * Inline CSS style
      *
      * @var string;
@@ -257,9 +264,10 @@ class IntegrationMethods
      * Formats the parent element of the form group
      *
      * @param $format
+     * @param $fit - from 0 - 4
      * @return $this
      */
-    public function format( $format )
+    public function format( $format, $fit = 0 )
     {
         $acceptedFormats = [
             'row'           => 'bridge-row',
@@ -267,6 +275,10 @@ class IntegrationMethods
             'row wrap'      => 'bridge-row-wrap',
             'column wrap'   => 'bridge-column-wrap',
         ];
+
+        if($fit < 0 || $fit > 4){
+            $fit = 0;
+        }
 
         /*
          * Checks whether the specified format of the user is
@@ -277,7 +289,9 @@ class IntegrationMethods
          */
         if(in_array($format, array_keys($acceptedFormats))){
             $this->format = $format;
+            $this->fit = $fit;
             $this->html_class[] = $acceptedFormats[$format];
+            $this->html_class[] = "fit-{$fit}";
         }
 
         /*
