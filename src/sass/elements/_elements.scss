@@ -1,5 +1,10 @@
 .bridge-widget {
+  margin-bottom: 20px;
+  width: 100%;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   .bridge-label {
 
@@ -13,5 +18,15 @@
     }
   }
 
+  .bridge-input {
+    width: 100%;
+  }
+
+
+  select {
+    width: 100%;
+  }
 
 }
+
+

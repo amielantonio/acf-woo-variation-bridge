@@ -1,9 +1,18 @@
-.bridge-widget .bridge-label {
-  width: 100%;
-  margin-bottom: 10px; }
-  .bridge-widget .bridge-label label {
+.bridge-widget {
+  margin-bottom: 20px;
+  width: 100%; }
+  .bridge-widget:last-child {
+    margin-bottom: 0; }
+  .bridge-widget .bridge-label {
     width: 100%;
-    font-weight: bold; }
+    margin-bottom: 10px; }
+    .bridge-widget .bridge-label label {
+      width: 100%;
+      font-weight: bold; }
+  .bridge-widget .bridge-input {
+    width: 100%; }
+  .bridge-widget select {
+    width: 100%; }
 
 .bridge-row, .bridge-row-wrap {
   display: flex;

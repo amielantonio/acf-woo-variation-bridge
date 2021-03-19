@@ -290,8 +290,14 @@ class IntegrationMethods
         if(in_array($format, array_keys($acceptedFormats))){
             $this->format = $format;
             $this->fit = $fit;
-            $this->html_class[] = $acceptedFormats[$format];
-            $this->html_class[] = "fit-{$fit}";
+
+            if($this->loop_support){
+                $this->setParentHtmlClass(["{$acceptedFormats[$format]} fit-{$fit}"]);
+            } else {
+                $this->html_class[] = $acceptedFormats[$format];
+                $this->html_class[] = "fit-{$fit}";
+            }
+
         }
 
         /*
