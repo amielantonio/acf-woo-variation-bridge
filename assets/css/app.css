@@ -11,8 +11,16 @@
       font-weight: bold; }
   .bridge-widget .bridge-input {
     width: 100%; }
-  .bridge-widget select {
-    width: 100%; }
+    .bridge-widget .bridge-input select,
+    .bridge-widget .bridge-input input[type="text"],
+    .bridge-widget .bridge-input input[type="email"],
+    .bridge-widget .bridge-input input[type="password"],
+    .bridge-widget .bridge-input textarea {
+      width: 100%; }
+  .bridge-widget .bridge-description {
+    font-style: italic;
+    font-size: 95%;
+    margin-top: 5px; }
 
 .bridge-row, .bridge-row-wrap {
   display: flex;

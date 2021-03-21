@@ -46,6 +46,14 @@ abstract class FieldHTML implements FieldInterface
      */
     protected $html_id;
 
+
+    /**
+     * The unfiltered version of the html id
+     *
+     * @var string
+     */
+    protected $html_id_unfiltered;
+
     /**
      * The HTML Class of the form widget
      *
@@ -234,21 +242,24 @@ abstract class FieldHTML implements FieldInterface
      */
     public function buildWrapper($childHTML)
     {
-        $opening = "<div class='bridge-widget'>";
+        $openingClass = $this->name . "_field";
+        $opening = "<div class='bridge-widget {$openingClass}'>";
         $closing = "</div>";
         $label = $this->label;
+        $labelFor = ($this->html_id_unfiltered <> "" ) ? $this->html_id : $this->name;
+
         $description = $this->description;
-        $descriptionHTML = $description <> "" ? "<br /><span>$description</span>" : "";
+        $descriptionHTML = $description <> "" ? "<div class='bridge-description'>$description</div>" : "";
         $requiredHTML = $this->buildRequiredHTML();
 
         return "{$opening}
                     <div class='bridge-label'>
-                        <label>{$label} {$requiredHTML}</label>
-                        {$descriptionHTML}
+                        <label for='{$labelFor}'>{$label} {$requiredHTML}</label>
                     </div>
                     <div class='bridge-input {$this->baseClass}'>
                         {$childHTML}
                     </div>
+                    {$descriptionHTML}
                 {$closing}";
     }
 
@@ -405,7 +416,10 @@ abstract class FieldHTML implements FieldInterface
 
         $classes = implode(" ", $this->html_class);
 
-        return "class='{$classes}' id='{$this->html_id}'{$width}";
+
+        $id = ($this->html_id_unfiltered == "" ) ? $this->name : $this->html_id;
+
+        return "class='{$classes}' id='{$id}'{$width}";
     }
 
     /**
@@ -544,6 +558,8 @@ abstract class FieldHTML implements FieldInterface
 
         $this->ctr = $ctr;
 
+        $this->html_id_unfiltered = $this->html_id;
+
         $this->html_id = isset($this->options['html_id'])
             ? $this->createAttribLoop($this->options['id'])
             : $this->createAttribLoop($this->acf_default['wrapper']['id']);
@@ -564,7 +580,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function setHtmlID($id)
     {
-        $this->html_id = $id;
+        $this->html_id_unfiltered = $this->html_id = $id;
 
 
         return $this;
@@ -610,6 +626,8 @@ abstract class FieldHTML implements FieldInterface
 
 
         $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
+
+        $this->html_id_unfiltered = $this->html_id;
 
         $this->html_id = isset($this->options['html_id'])
             ? $this->createAttribLoop($this->options['id'])
