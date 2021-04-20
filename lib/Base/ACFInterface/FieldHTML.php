@@ -133,6 +133,13 @@ abstract class FieldHTML implements FieldInterface
     protected $description;
 
     /**
+     * Check if the form accepts multiple
+     *
+     * @var string
+     */
+    protected $multiple;
+
+    /**
      * The html info of the field that was mutated.
      *
      * @var array
@@ -445,7 +452,7 @@ abstract class FieldHTML implements FieldInterface
      */
     protected function is_multiple()
     {
-        return $this->is_disabled > 0 ? "multiple='multiple'" : "";
+        return $this->multiple > 0 ? "multiple='multiple'" : "";
     }
 
     /**
@@ -615,16 +622,15 @@ abstract class FieldHTML implements FieldInterface
      */
     public function fill()
     {
-        $this->label = $this->setFill('label');
+        $this->label = isset($this->options['label']) ? $this->options['label'] : $this->acf_default['field_title'];
         $this->fieldType = $this->setFill('type');
         $this->description = $this->setFill('description');
         $this->is_required = $this->setFill('required');
         $this->defaultValue = $this->setFill('value');
         $this->placeholder = $this->setFill('placeholder');
         $this->choices = $this->setFill('choices');
-
+        $this->multiple = $this->setFill('multiple');
         $this->html_class = isset($this->options['classes']) && count($this->options) > 0? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
-
 
         $this->html_id_unfiltered = $this->html_id;
 

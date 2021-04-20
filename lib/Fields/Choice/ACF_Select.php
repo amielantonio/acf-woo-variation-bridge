@@ -34,6 +34,7 @@ class ACF_Select extends FieldHTML {
         "default_value" => "",
         "placeholder" => "",
         "maxLength" => "",
+        "multiple" => 0,
         "choices" => []
     ];
 
@@ -65,15 +66,18 @@ class ACF_Select extends FieldHTML {
         $cHtml = $this->closing_html;
         $choices = $this->choices();
 
+
+
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}
-                {$htmlInfo['required']} 
+                {$htmlInfo['required']}
                 {$htmlInfo['disabled']}
-                {$htmlInfo['mulitple']}
+                {$htmlInfo['multiple']}
                 {$htmlInfo['name']}>
-                {$choices}            
+                {$choices}
             {$cHtml}
         ";
+
         return $html;
     }
 
