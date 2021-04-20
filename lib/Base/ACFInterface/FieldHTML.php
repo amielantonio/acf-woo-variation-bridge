@@ -615,17 +615,16 @@ abstract class FieldHTML implements FieldInterface
      */
     public function fill()
     {
-        $this->label = isset($this->options['label']) ? $this->options['label'] : $this->acf_default['field_title'];
-        $this->fieldType = isset($this->options['type']) ? $this->options['type'] : $this->acf_default['type'];
-        $this->description = isset($this->options['description']) ? $this->options['description'] : $this->acf_default['instructions'];
-        $this->is_required = isset($this->options['required']) ? $this->options['required'] : $this->acf_default['required'];
+        $this->label = $this->setFill('label');
+        $this->fieldType = $this->setFill('type');
+        $this->description = $this->setFill('description');
+        $this->is_required = $this->setFill('required');
+        $this->defaultValue = $this->setFill('value');
+        $this->placeholder = $this->setFill('placeholder');
+        $this->choices = $this->setFill('choices');
 
-        $this->defaultValue = isset($this->options['value']) ? $this->options['value'] : $this->acf_default['default_value'];
-        $this->placeholder = isset($this->options['placeholder']) ? $this->options['placeholder'] : $this->acf_default['placeholder'];
-        $this->choices = isset($this->options['choices']) ? $this->options['choices'] : $this->acf_default['choices'];
+        $this->html_class = isset($this->options['classes']) && count($this->options) > 0? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
 
-
-        $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
 
         $this->html_id_unfiltered = $this->html_id;
 
@@ -640,9 +639,29 @@ abstract class FieldHTML implements FieldInterface
         $this->html_value = $this->getValue();
     }
 
-    public function addScript()
-    {
 
+    /**
+     * Sets the fill value
+     *
+     * @param $name
+     * @param string $default_value
+     * @return mixed|string
+     */
+    public function setFill($name, $default_value = "")
+    {
+        if( isset($this->options[$name]) && count($this->options) > 0  ) {
+            return $this->options['label'];
+        }
+
+        if( isset($this->acf_default[$name])) {
+            return $this->acf_default[$name];
+        }
+
+        if( $default_value <> "" ){
+            return $default_value;
+        }
+
+        return "";
     }
 
 
