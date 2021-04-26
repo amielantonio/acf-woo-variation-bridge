@@ -39,11 +39,18 @@ class ACF_TrueFalse extends FieldHTML
 
     protected $baseClass = "bridge-switch-container";
 
-
-
     public function __construct($field, array $options = [])
     {
         parent::__construct($field, $options);
+    }
+
+    protected function valueHTML()
+    {
+        if($this->html_value == "yes") {
+            return "checked='checked'";
+        }
+
+        return "";
     }
 
     public function buildField()
@@ -52,7 +59,7 @@ class ACF_TrueFalse extends FieldHTML
 
         $html = "<input type='hidden' {$htmlInfo['name']} value='0'>
                  <div class='bridge-switch'>
-                    <input type='checkbox' {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']}>
+                    <input type='checkbox' {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']} {$htmlInfo['value']}>
                     <span class='bridge-switch__slider'> </span>
                 </div>";
 

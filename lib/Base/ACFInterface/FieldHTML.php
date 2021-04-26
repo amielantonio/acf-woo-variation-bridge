@@ -40,6 +40,13 @@ abstract class FieldHTML implements FieldInterface
     protected $name;
 
     /**
+     * Unfiltered name
+     *
+     * @var string
+     */
+    protected $_name;
+
+    /**
      * The HTML ID of the form widget
      *
      * @var string
@@ -363,10 +370,20 @@ abstract class FieldHTML implements FieldInterface
      */
     protected function getValue()
     {
-        $dbValue = get_post_meta($this->post_id, $this->name)[0];
+        $dbValue = get_post_meta($this->post_id, $this->_name);
+
+
+        if(!$dbValue) {
+            return "";
+        }
+
+        if(count($dbValue ) > 0 ){
+            $dbValue = $dbValue[0];
+        }
+
         $defaultValue = $this->defaultValue;
 
-        return isset($dbValue) && $dbValue <> "" ? $dbValue : $defaultValue;
+        return $dbValue <> "" ? $dbValue : $defaultValue;
     }
 
 
@@ -541,11 +558,17 @@ abstract class FieldHTML implements FieldInterface
      * Creates the ID for the html
      *
      * @param int $attrib
+     * @param string $prop
      * @return string
      */
-    public function createAttribLoop($attrib)
+    public function createAttribLoop($attrib, $prop = "")
     {
         if ($this->loop_support) {
+
+            $unfilteredProp = "_{$prop}";
+
+            $this->$unfilteredProp = $attrib;
+
             return $attrib = $attrib . "[{$this->ctr}]";
         }
 
@@ -572,8 +595,8 @@ abstract class FieldHTML implements FieldInterface
             : $this->createAttribLoop($this->acf_default['wrapper']['id']);
 
         $this->name = isset($this->options['name'])
-            ? $this->createAttribLoop($this->options['excerpt'])
-            : $this->createAttribLoop($this->acf_default['excerpt']);
+            ? $this->createAttribLoop($this->options['excerpt'], "name")
+            : $this->createAttribLoop($this->acf_default['excerpt'], "name");
 
         return $this;
     }

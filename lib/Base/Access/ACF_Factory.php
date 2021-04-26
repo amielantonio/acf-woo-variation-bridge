@@ -146,6 +146,8 @@ class ACF_Factory
 
         $fieldObj = (object)$this->getFieldSchema($field_id);
 
+        var_dump($fieldObj);
+
         return $this->makeParent($this->makeWidget($fieldObj), true);
     }
 
