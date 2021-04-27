@@ -59,7 +59,7 @@ class ACF_TrueFalse extends FieldHTML
 
         $html = "<input type='hidden' {$htmlInfo['name']} value='0'>
                  <div class='bridge-switch'>
-                    <input type='checkbox' {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']} {$htmlInfo['value']}>
+                    <input type='checkbox' {$htmlInfo['name']} {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']} {$htmlInfo['value']}>
                     <span class='bridge-switch__slider'> </span>
                 </div>";
 

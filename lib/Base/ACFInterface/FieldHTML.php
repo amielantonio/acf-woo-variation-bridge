@@ -461,7 +461,7 @@ abstract class FieldHTML implements FieldInterface
         //Check for binding values
         $dbValue = $this->getValue();
 
-//        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
+        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
 
         //Get choices
         foreach ($this->choices as $key => $value) {

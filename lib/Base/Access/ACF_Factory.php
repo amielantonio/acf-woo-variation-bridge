@@ -167,6 +167,7 @@ class ACF_Factory
             $dataAttributes = $this->createDataAttributesHTML();
 
             return "<div class='bridge-parent $class' id='{$id}' {$dataAttributes}>
+
                         {$child}
                     </div>";
         }
@@ -174,6 +175,9 @@ class ACF_Factory
         return $child;
 
     }
+
+
+
 
     /**
      * Create the html format of the data attribute
