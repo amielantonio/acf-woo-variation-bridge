@@ -146,8 +146,6 @@ class ACF_Factory
 
         $fieldObj = (object)$this->getFieldSchema($field_id);
 
-        var_dump($fieldObj);
-
         return $this->makeParent($this->makeWidget($fieldObj), true);
     }
 
@@ -167,7 +165,6 @@ class ACF_Factory
             $dataAttributes = $this->createDataAttributesHTML();
 
             return "<div class='bridge-parent $class' id='{$id}' {$dataAttributes}>
-
                         {$child}
                     </div>";
         }
@@ -176,7 +173,19 @@ class ACF_Factory
 
     }
 
+    /**
+     * Create hidden parent field
+     *
+     * @return string
+     */
+    public function makeHiddenParentField()
+    {
+        $parentSchema = $this->getParentSchema();
 
+        $excerpt = $parentSchema['excerpt'];
+
+        return "<input type='hidden' name='parent-{$excerpt}' id='parent-id-{$excerpt}' value='{$this->field_group_id}'>";
+    }
 
 
     /**
@@ -236,6 +245,14 @@ class ACF_Factory
     public function getFieldGroupSchema($field_group_id)
     {
         return $this->widgets = $this->schema->getField($field_group_id);
+    }
+
+
+    public function getParentSchema()
+    {
+        $widget = (array)$this->schema->getField($this->field_group_id);
+
+        return $widget[$this->field_group_id];
     }
 
     /**
