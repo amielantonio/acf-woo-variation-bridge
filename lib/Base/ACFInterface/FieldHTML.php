@@ -458,13 +458,10 @@ abstract class FieldHTML implements FieldInterface
         //Add base HTML as placeholder
         $html .= "<option value=''>Select {$this->label}</option>";
 
-
         //Check for binding values
         $dbValue = $this->getValue();
 
-        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
-
-
+//        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
 
         //Get choices
         foreach ($this->choices as $key => $value) {
@@ -540,7 +537,6 @@ abstract class FieldHTML implements FieldInterface
         } else {
             $this->html_class[] = $class;
         }
-
 
         return $this;
     }

@@ -1,0 +1,12 @@
+// OVERRIDE SELECT2
+.select2-container .select2-selection--multiple .select2-search--inline {
+  float: left !important;
+}
+
+.select2-bridge + .select2-container {
+  width: 100% !important;
+}
+
+.select2-bridge + .select2-container .select2-selection {
+  background-color: #fff !important;
+}

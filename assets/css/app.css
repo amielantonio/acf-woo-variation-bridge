@@ -100,3 +100,12 @@
     box-shadow: 0 0 1px #00B1CD; }
   .bridge-switch input:checked + .bridge-switch__slider:before {
     transform: translateX(25px); }
+
+.select2-container .select2-selection--multiple .select2-search--inline {
+  float: left !important; }
+
+.select2-bridge + .select2-container {
+  width: 100% !important; }
+
+.select2-bridge + .select2-container .select2-selection {
+  background-color: #fff !important; }

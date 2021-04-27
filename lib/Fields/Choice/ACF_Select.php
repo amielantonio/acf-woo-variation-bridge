@@ -61,12 +61,15 @@ class ACF_Select extends FieldHTML {
      */
     public function buildField()
     {
+        //Add the select2 for multiple selection
+        if($this->multiple) {
+            $this->addClass('select2-bridge');
+        }
+
         $htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
         $choices = $this->choices();
-
-
 
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}

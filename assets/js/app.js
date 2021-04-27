@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("\n\n//# sourceURL=webpack:///./src/js/app.js?");
+eval("\r\n(function($){\r\n\r\n    $(function(){\r\n\r\n        //For select2 widgets - mostly used for dropdown that has multiple input enabled\r\n        $(document).find('.select2-bridge').select2();\r\n\r\n    });\r\n\r\n\r\n})(jQuery);\r\n\r\n\n\n//# sourceURL=webpack:///./src/js/app.js?");
 
 /***/ }),
 
