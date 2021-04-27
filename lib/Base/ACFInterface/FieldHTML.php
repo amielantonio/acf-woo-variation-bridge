@@ -455,8 +455,23 @@ abstract class FieldHTML implements FieldInterface
     {
         $html = "";
 
+        //Add base HTML as placeholder
+        $html .= "<option value=''>Select {$this->label}</option>";
+
+
+        //Check for binding values
+        $dbValue = $this->getValue();
+
+        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
+
+
+
+        //Get choices
         foreach ($this->choices as $key => $value) {
-            $html .= "<option value='{$key}'>{$value}</option>";
+
+            $valHTML = $dbValue == $key ? " selected='selected'" : "";
+
+            $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
         }
 
         return $html;
