@@ -49,6 +49,7 @@ class ACF_PostObject extends ACF_Select {
     {
         parent::__construct($field, $options);
         $this->getPostObjectChoices();
+        $this->addClass('select2-bridge');
     }
 
     /**
