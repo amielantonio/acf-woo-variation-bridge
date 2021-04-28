@@ -66,17 +66,20 @@ class ACF_Select extends FieldHTML {
             $this->addClass('select2-bridge');
         }
 
+
         $htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
         $choices = $this->choices();
+
+        $name = $this->multiple ? "name='{$this->name}[]'" : $htmlInfo['name'];
 
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}
                 {$htmlInfo['required']}
                 {$htmlInfo['disabled']}
                 {$htmlInfo['multiple']}
-                {$htmlInfo['name']}>
+                {$name}>
                 {$choices}
             {$cHtml}
         ";

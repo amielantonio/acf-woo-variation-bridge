@@ -362,6 +362,11 @@ abstract class FieldHTML implements FieldInterface
      */
     protected function valueHTML()
     {
+        if( is_array($this->html_value)) {
+            $value = implode(', ', $this->html_value);
+            return "value='{$value}'";
+        }
+
         return "value='{$this->html_value}'";
     }
 
@@ -461,14 +466,26 @@ abstract class FieldHTML implements FieldInterface
         //Check for binding values
         $dbValue = $this->getValue();
 
-        echo "{$this->label}: {$this->_name} - {$dbValue} <br />";
+//        var_dump($dbValue);
 
         //Get choices
         foreach ($this->choices as $key => $value) {
 
-            $valHTML = $dbValue == $key ? " selected='selected'" : "";
+            if( is_array($dbValue)) {
 
-            $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
+                foreach($dbValue as $item => $val ){
+
+                    $valHTML = $val == $key ? "selected='selected'" : "";
+
+                    $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
+
+                }
+
+            } else {
+                $valHTML = $dbValue == $key ? " selected='selected'" : "";
+
+                $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
+            }
         }
 
         return $html;
