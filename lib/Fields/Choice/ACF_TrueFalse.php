@@ -46,7 +46,7 @@ class ACF_TrueFalse extends FieldHTML
 
     protected function valueHTML()
     {
-        if($this->html_value == "yes") {
+        if($this->html_value == "on") {
             return "checked='checked'";
         }
 
@@ -57,7 +57,7 @@ class ACF_TrueFalse extends FieldHTML
     {
         $htmlInfo = $this->html();
 
-        $html = "<input type='hidden' {$htmlInfo['name']} value='0'>
+        $html = "<input type='hidden' {$htmlInfo['name']} value='off'>
                  <div class='bridge-switch'>
                     <input type='checkbox' {$htmlInfo['name']} {$htmlInfo['required']} {$htmlInfo['wrappers']} {$htmlInfo['disabled']} {$htmlInfo['value']}>
                     <span class='bridge-switch__slider'> </span>
