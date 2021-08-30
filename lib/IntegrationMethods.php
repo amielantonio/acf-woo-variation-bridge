@@ -160,6 +160,10 @@ class IntegrationMethods
 
         self::$instance->field_group_id = $field_group_id;
 
+        //reset loop support and ctr
+        self::$instance->loop_support = false;
+        self::$instance->ctr = 0;
+
         return self::$instance->instance();
     }
 
@@ -280,6 +284,9 @@ class IntegrationMethods
             $fit = 0;
         }
 
+        //reset the html class
+        $this->html_class = [];
+
         /*
          * Checks whether the specified format of the user is
          * available within the key settings of our integration
@@ -297,7 +304,6 @@ class IntegrationMethods
                 $this->html_class[] = $acceptedFormats[$format];
                 $this->html_class[] = "fit-{$fit}";
             }
-
         }
 
         /*
