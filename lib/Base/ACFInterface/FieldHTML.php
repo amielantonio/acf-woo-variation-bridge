@@ -375,8 +375,12 @@ abstract class FieldHTML implements FieldInterface
      */
     protected function getValue()
     {
-        $dbValue = get_post_meta($this->post_id, $this->_name);
-
+        // Support for those that don't have unfiltered name
+        if($this->_name == "" ){
+            $dbValue = get_post_meta($this->post_id, $this->name);
+        } else {
+            $dbValue = get_post_meta($this->post_id, $this->_name);
+        }
 
         if(!$dbValue) {
             return "";

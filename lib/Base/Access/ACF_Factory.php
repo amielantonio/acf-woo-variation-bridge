@@ -130,7 +130,9 @@ class ACF_Factory
     {
         $field_group_id = $field_group_id <> "" ? $field_group_id : $this->field_group_id;
 
-        return $this->makeParent($this->makeWidgets($field_group_id), true);
+        return $this->makeParent(
+                    $this->makeWidgets($field_group_id),
+            true);
     }
 
     /**
@@ -146,7 +148,9 @@ class ACF_Factory
 
         $fieldObj = (object)$this->getFieldSchema($field_id);
 
-        return $this->makeParent($this->makeWidget($fieldObj), true);
+        return $this->makeParent(
+                    $this->makeWidget($fieldObj),
+                    true);
     }
 
     /**
