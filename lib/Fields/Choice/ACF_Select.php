@@ -34,6 +34,7 @@ class ACF_Select extends FieldHTML {
         "default_value" => "",
         "placeholder" => "",
         "maxLength" => "",
+        "multiple" => 0,
         "choices" => []
     ];
 
@@ -60,20 +61,29 @@ class ACF_Select extends FieldHTML {
      */
     public function buildField()
     {
+        //Add the select2 for multiple selection
+        if($this->multiple) {
+            $this->addClass('select2-bridge');
+        }
+
+
         $htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
         $choices = $this->choices();
 
+        $name = $this->multiple ? "name='{$this->name}[]'" : $htmlInfo['name'];
+
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}
-                {$htmlInfo['required']} 
+                {$htmlInfo['required']}
                 {$htmlInfo['disabled']}
-                {$htmlInfo['mulitple']}
-                {$htmlInfo['name']}>
-                {$choices}            
+                {$htmlInfo['multiple']}
+                {$name}>
+                {$choices}
             {$cHtml}
         ";
+
         return $html;
     }
 

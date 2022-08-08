@@ -26,6 +26,13 @@ abstract class FieldHTML implements FieldInterface
     protected $fieldType;
 
     /**
+     * Post ID
+     *
+     * @var int
+     */
+    protected $post_id;
+
+    /**
      * The field name
      *
      * @var
@@ -33,11 +40,26 @@ abstract class FieldHTML implements FieldInterface
     protected $name;
 
     /**
+     * Unfiltered name
+     *
+     * @var string
+     */
+    protected $_name;
+
+    /**
      * The HTML ID of the form widget
      *
      * @var string
      */
     protected $html_id;
+
+
+    /**
+     * The unfiltered version of the html id
+     *
+     * @var string
+     */
+    protected $html_id_unfiltered;
 
     /**
      * The HTML Class of the form widget
@@ -59,6 +81,14 @@ abstract class FieldHTML implements FieldInterface
      * @var string | int
      */
     protected $defaultValue;
+
+    /**
+     * The html value that should be rendered. This value can be the default Value or the
+     * value that was from the database.
+     *
+     * @var string | int
+     */
+    protected $html_value;
 
     /**
      * If the form is required by default
@@ -110,6 +140,13 @@ abstract class FieldHTML implements FieldInterface
     protected $description;
 
     /**
+     * Check if the form accepts multiple
+     *
+     * @var string
+     */
+    protected $multiple;
+
+    /**
      * The html info of the field that was mutated.
      *
      * @var array
@@ -130,13 +167,35 @@ abstract class FieldHTML implements FieldInterface
      */
     protected $attributes = [];
 
+    /**
+     * HTML Data attributes
+     *
+     * @var array
+     */
     protected $dataAttributes = [];
 
+    /**
+     *
+     *
+     * @var array
+     */
     protected $options = [];
 
+    /**
+     * Loop support for widgets that has an array as the name
+     *
+     * @var bool
+     */
     private $loop_support = false;
 
+    /**
+     * counter for the loop that defaults to 0
+     *
+     * @var int
+     */
     private $ctr = 0;
+
+    protected $baseClass;
 
 
     /**
@@ -148,10 +207,13 @@ abstract class FieldHTML implements FieldInterface
      */
     public function __construct($field, $options = [])
     {
+        global $post;
         $this->field = reset($field);
         $this->options = $options;
         $this->acf_default = $this->map();
         $this->fill();
+
+        $this->post_id = $post;
     }
 
     /**
@@ -174,7 +236,7 @@ abstract class FieldHTML implements FieldInterface
         $this->htmlInfo = $this->html();
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
-        $dataAttributes = $this->dataAttributes;
+        $dataAttributes = $this->createDataAttributesHTML();
 
         $html = "{$oHtml} {$this->htmlInfo['type']} {$this->htmlInfo['wrappers']} {$this->htmlInfo['placeholder']} {$this->htmlInfo['name']} {$dataAttributes}
                 {$this->htmlInfo['required']}
@@ -194,21 +256,51 @@ abstract class FieldHTML implements FieldInterface
      */
     public function buildWrapper($childHTML)
     {
-        $opening = "<div>";
+        $openingClass = $this->name . "_field";
+        $opening = "<div class='bridge-widget {$openingClass}'>";
         $closing = "</div>";
         $label = $this->label;
+        $labelFor = ($this->html_id_unfiltered <> "" ) ? $this->html_id : $this->name;
+
         $description = $this->description;
-        $descriptionHTML = $description <> "" ? "<span>$description</span>" : "";
+        $descriptionHTML = $description <> "" ? "<div class='bridge-description'>$description</div>" : "";
+        $requiredHTML = $this->buildRequiredHTML();
 
         return "{$opening}
                     <div class='bridge-label'>
-                        <label>{$label}</label>
-                        {$descriptionHTML}
+                        <label for='{$labelFor}'>{$label} {$requiredHTML}</label>
                     </div>
-                    <div class='bridge-input'>
+                    <div class='bridge-input {$this->baseClass}'>
                         {$childHTML}
                     </div>
+                    {$descriptionHTML}
                 {$closing}";
+    }
+
+    /**
+     * Build the required html
+     *
+     * @return string
+     */
+    public function buildRequiredHTML()
+    {
+        if(!$this->is_required){
+            return "";
+        }
+
+        return "<span class='bridge-required'>*</span>";
+    }
+
+
+
+    public function buildSuffixHTML()
+    {
+
+    }
+
+    public function buildPrefixHTML()
+    {
+
     }
 
     /**
@@ -218,6 +310,8 @@ abstract class FieldHTML implements FieldInterface
      */
     public function render()
     {
+        $this->html_value = $this->getValue();
+
         return $this->build();
     }
 
@@ -234,9 +328,10 @@ abstract class FieldHTML implements FieldInterface
             "wrappers" => $this->wrappers(),
             "placeholder" => $this->placeholderHTML(),
             "required" => $this->requiredHTML(),
-            "value" => $this->defaultValueHTML(),
+            "value" => $this->valueHTML(),
             "disabled" => $this->disabledHTML(),
             "multiple" => $this->is_multiple(),
+            "data_attributes" => $this->createDataAttributesHTML(),
         ];
     }
 
@@ -250,32 +345,92 @@ abstract class FieldHTML implements FieldInterface
         return $this->fieldType <> "" ? "type='{$this->fieldType}'" : "type='text'";
     }
 
+    /**
+     * Get default value html
+     *
+     * @return string
+     */
     protected function defaultValueHTML()
     {
         return $this->defaultValue <> "" ? "value='{$this->defaultValue}'" : "";
     }
 
-
-    protected function getValue($id)
+    /**
+     * Value HTML that gets the post meta value or the default value.
+     *
+     * @return string
+     */
+    protected function valueHTML()
     {
+        if( is_array($this->html_value)) {
+            $value = implode(', ', $this->html_value);
+            return "value='{$value}'";
+        }
 
+        return "value='{$this->html_value}'";
     }
 
+    /**
+     * Get the value of the value attribute of the field
+     */
+    protected function getValue()
+    {
+        // Support for those that don't have unfiltered name
+        if($this->_name == "" ){
+            $dbValue = get_post_meta($this->post_id, $this->name);
+        } else {
+            $dbValue = get_post_meta($this->post_id, $this->_name);
+        }
+
+        if(!$dbValue) {
+            return "";
+        }
+
+        if(count($dbValue ) > 0 ){
+            $dbValue = $dbValue[0];
+        }
+
+        $defaultValue = $this->defaultValue;
+
+        return $dbValue <> "" ? $dbValue : $defaultValue;
+    }
+
+
+    /**
+     * Create HTML for the name attribute
+     *
+     * @return string
+     */
     protected function nameHTML()
     {
         return $this->name <> "" ? "name='{$this->name}'" : "";
     }
 
+    /**
+     * Create HTML for the placeholder attribute
+     *
+     * @return string
+     */
     protected function placeholderHTML()
     {
         return $this->placeholder <> "" ? "placeholder='{$this->placeholder}'" : "";
     }
 
+    /**
+     * Create HTML for the required attribute
+     *
+     * @return string
+     */
     protected function requiredHTML()
     {
         return $this->is_required > 0 ? "required='required'" : "";
     }
 
+    /**
+     * Create HTML for the disabled HTML
+     *
+     * @return string
+     */
     protected function disabledHTML()
     {
         return $this->is_disabled > 0 ? "disabled='disabled'" : "";
@@ -294,7 +449,10 @@ abstract class FieldHTML implements FieldInterface
 
         $classes = implode(" ", $this->html_class);
 
-        return "class='{$classes}' id='{$this->html_id}'{$width}";
+
+        $id = ($this->html_id_unfiltered == "" ) ? $this->name : $this->html_id;
+
+        return "class='{$classes}' id='{$id}'{$width}";
     }
 
     /**
@@ -306,8 +464,32 @@ abstract class FieldHTML implements FieldInterface
     {
         $html = "";
 
+        //Add base HTML as placeholder
+        $html .= "<option value=''>Select {$this->label}</option>";
+
+        //Check for binding values
+        $dbValue = $this->getValue();
+
+//        var_dump($dbValue);
+
+        //Get choices
         foreach ($this->choices as $key => $value) {
-            $html .= "<option value='{$key}'>{$value}</option>";
+
+            if( is_array($dbValue)) {
+
+                foreach($dbValue as $item => $val ){
+
+                    $valHTML = $val == $key ? "selected='selected'" : "";
+
+                    $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
+
+                }
+
+            } else {
+                $valHTML = $dbValue == $key ? " selected='selected'" : "";
+
+                $html .= "<option value='{$key}'{$valHTML}>{$value}</option>";
+            }
         }
 
         return $html;
@@ -320,7 +502,7 @@ abstract class FieldHTML implements FieldInterface
      */
     protected function is_multiple()
     {
-        return $this->is_disabled > 0 ? "multiple='multiple'" : "";
+        return $this->multiple > 0 ? "multiple='multiple'" : "";
     }
 
     /**
@@ -377,19 +559,48 @@ abstract class FieldHTML implements FieldInterface
             $this->html_class[] = $class;
         }
 
+        return $this;
+    }
+
+    /**
+     * Add the post ID inside the widget
+     *
+     * @param $post_id
+     * @return $this
+     */
+    public function post($post_id)
+    {
+
+
+        $this->post_id = $post_id;
+
+        /*
+         * Add data attribute to the post ID.
+         * This will allow users to add more
+         * options and customization in the frontend
+         * or javascript.
+         */
+        $this->addDataAttribute('post_id', $post_id);
 
         return $this;
     }
+
 
     /**
      * Creates the ID for the html
      *
      * @param int $attrib
+     * @param string $prop
      * @return string
      */
-    public function createAttribLoop($attrib)
+    public function createAttribLoop($attrib, $prop = "")
     {
         if ($this->loop_support) {
+
+            $unfilteredProp = "_{$prop}";
+
+            $this->$unfilteredProp = $attrib;
+
             return $attrib = $attrib . "[{$this->ctr}]";
         }
 
@@ -409,13 +620,15 @@ abstract class FieldHTML implements FieldInterface
 
         $this->ctr = $ctr;
 
+        $this->html_id_unfiltered = $this->html_id;
+
         $this->html_id = isset($this->options['html_id'])
             ? $this->createAttribLoop($this->options['id'])
             : $this->createAttribLoop($this->acf_default['wrapper']['id']);
 
         $this->name = isset($this->options['name'])
-            ? $this->createAttribLoop($this->options['excerpt'])
-            : $this->createAttribLoop($this->acf_default['excerpt']);
+            ? $this->createAttribLoop($this->options['excerpt'], "name")
+            : $this->createAttribLoop($this->acf_default['excerpt'], "name");
 
         return $this;
     }
@@ -429,7 +642,7 @@ abstract class FieldHTML implements FieldInterface
      */
     public function setHtmlID($id)
     {
-        $this->html_id = $id;
+        $this->html_id_unfiltered = $this->html_id = $id;
 
 
         return $this;
@@ -465,16 +678,16 @@ abstract class FieldHTML implements FieldInterface
     public function fill()
     {
         $this->label = isset($this->options['label']) ? $this->options['label'] : $this->acf_default['field_title'];
-        $this->fieldType = isset($this->options['type']) ? $this->options['type'] : $this->acf_default['type'];
-        $this->description = isset($this->options['description']) ? $this->options['description'] : $this->acf_default['instructions'];
-        $this->is_required = isset($this->options['required']) ? $this->options['required'] : $this->acf_default['required'];
+        $this->fieldType = $this->setFill('type');
+        $this->description = $this->setFill('description');
+        $this->is_required = $this->setFill('required');
+        $this->defaultValue = $this->setFill('value');
+        $this->placeholder = $this->setFill('placeholder');
+        $this->choices = $this->setFill('choices');
+        $this->multiple = $this->setFill('multiple');
+        $this->html_class = isset($this->options['classes']) && count($this->options) > 0? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
 
-        $this->defaultValue = isset($this->options['value']) ? $this->options['value'] : $this->acf_default['default_value'];
-        $this->placeholder = isset($this->options['placeholder']) ? $this->options['placeholder'] : $this->acf_default['placeholder'];
-        $this->choices = isset($this->options['choices']) ? $this->options['choices'] : $this->acf_default['choices'];
-
-
-        $this->html_class = isset($this->options['classes']) ? $this->options['classes'] : explode(" ", $this->acf_default['wrapper']['class']);
+        $this->html_id_unfiltered = $this->html_id;
 
         $this->html_id = isset($this->options['html_id'])
             ? $this->createAttribLoop($this->options['id'])
@@ -484,11 +697,32 @@ abstract class FieldHTML implements FieldInterface
             ? $this->createAttribLoop($this->options['excerpt'])
             : $this->createAttribLoop($this->acf_default['excerpt']);
 
+        $this->html_value = $this->getValue();
     }
 
-    public function addScript()
-    {
 
+    /**
+     * Sets the fill value
+     *
+     * @param $name
+     * @param string $default_value
+     * @return mixed|string
+     */
+    public function setFill($name, $default_value = "")
+    {
+        if( isset($this->options[$name]) && count($this->options) > 0  ) {
+            return $this->options['label'];
+        }
+
+        if( isset($this->acf_default[$name])) {
+            return $this->acf_default[$name];
+        }
+
+        if( $default_value <> "" ){
+            return $default_value;
+        }
+
+        return "";
     }
 
 

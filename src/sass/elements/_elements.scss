@@ -1,0 +1,44 @@
+.bridge-widget {
+  margin-bottom: 20px;
+  width: 100%;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .bridge-label {
+
+    width: 100%;
+    margin-bottom: 10px;
+
+    label {
+      width: 100%;
+      font-weight: bold;
+
+    }
+  }
+
+  .bridge-input {
+    width: 100%;
+
+    select,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea{
+      width: 100%;
+    }
+  }
+
+
+  .bridge-description {
+    font-style: italic;
+    font-size: 95%;
+    margin-top: 5px;
+  }
+
+
+
+}
+
+

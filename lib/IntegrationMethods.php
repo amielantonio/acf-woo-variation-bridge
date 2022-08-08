@@ -29,6 +29,14 @@ class IntegrationMethods
      */
     public $field_id;
 
+
+    /**
+     * Post id where to get the post meta
+     *
+     * @var int
+     */
+    public $postID;
+
     /**
      * Loop support for the widgets
      *
@@ -85,8 +93,31 @@ class IntegrationMethods
         'post_object',
     ];
 
+    /**
+     * Parent element formatting CSS
+     *
+     * @var
+     */
+    private $format;
 
+    /**
+     * Specifies the number of items inside the row;
+     *
+     * @var
+     */
+    private $fit;
 
+    /**
+     * Inline CSS style
+     *
+     * @var string;
+     */
+    private $style;
+
+    public function __construct()
+    {
+        add_action('admin_enqueue_scripts', array(__CLASS__, 'scripts'));
+    }
 
     /**
      * Initialize Class
@@ -100,6 +131,7 @@ class IntegrationMethods
 
         self::$instance->autoload();
 
+
     }
 
     /**
@@ -108,6 +140,11 @@ class IntegrationMethods
     private function autoload()
     {
         require_once __DIR__ . '/../vendor/autoload.php';
+    }
+
+    public function scripts()
+    {
+
     }
 
     /**
@@ -122,6 +159,10 @@ class IntegrationMethods
         self::init();
 
         self::$instance->field_group_id = $field_group_id;
+
+        //reset loop support and ctr
+        self::$instance->loop_support = false;
+        self::$instance->ctr = 0;
 
         return self::$instance->instance();
     }
@@ -168,6 +209,19 @@ class IntegrationMethods
     }
 
     /**
+     * Add post to the integration
+     *
+     * @param $post_id
+     * @return IntegrationMethods
+     */
+    public function post( $post_id )
+    {
+        $this->postID = $post_id;
+
+        return $this->instance();
+    }
+
+    /**
      * Sets the parent html ID
      *
      * @param $id
@@ -208,6 +262,64 @@ class IntegrationMethods
         $this->html_class = $class;
 
         return $this->instance();
+    }
+
+    /**
+     * Formats the parent element of the form group
+     *
+     * @param $format
+     * @param $fit - from 0 - 4
+     * @return $this
+     */
+    public function format( $format, $fit = 0 )
+    {
+        $acceptedFormats = [
+            'row'           => 'bridge-row',
+            'column'        => 'bridge-column',
+            'row wrap'      => 'bridge-row-wrap',
+            'column wrap'   => 'bridge-column-wrap',
+        ];
+
+        if($fit < 0 || $fit > 4){
+            $fit = 0;
+        }
+
+        //reset the html class
+        $this->html_class = [];
+
+        /*
+         * Checks whether the specified format of the user is
+         * available within the key settings of our integration
+         *
+         * if the format is accepted, register the corresponding
+         * css class.
+         */
+        if(in_array($format, array_keys($acceptedFormats))){
+            $this->format = $format;
+            $this->fit = $fit;
+
+            if($this->loop_support){
+                $this->setParentHtmlClass(["{$acceptedFormats[$format]} fit-{$fit}"]);
+            } else {
+                $this->html_class[] = $acceptedFormats[$format];
+                $this->html_class[] = "fit-{$fit}";
+            }
+        }
+
+        /*
+         * If the submitted format is an array, we can conclude
+         * that the submitted format is a css configuration, so
+         * we will register it under the style config.
+         */
+        if(is_array($format)){
+            foreach($format as $key => $value) {
+                $this->style .= "{$key}: {$value};";
+            }
+        }
+
+
+
+        return $this;
     }
 
     /**

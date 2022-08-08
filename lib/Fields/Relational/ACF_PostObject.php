@@ -49,6 +49,7 @@ class ACF_PostObject extends ACF_Select {
     {
         parent::__construct($field, $options);
         $this->getPostObjectChoices();
+        $this->addClass('select2-bridge');
     }
 
     /**
@@ -56,7 +57,11 @@ class ACF_PostObject extends ACF_Select {
      */
     public function getPostObjectChoices()
     {
-        $post_type = $this->field['content']['post_type'][0];
+        $post_type = "";
+        if(count($this->field['content']['post_type']) > 0) {
+            $post_type = $this->field['content']['post_type'][0];
+        }
+
 
         $choices = [];
         $args  = [

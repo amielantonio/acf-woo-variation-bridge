@@ -25,6 +25,13 @@ class ACF_Factory
     private $field_id;
 
     /**
+     * Post ID
+     *
+     * @var int
+     */
+    private $postID;
+
+    /**
      * check if the field should contain a loop or array support
      *
      * @var bool
@@ -123,7 +130,9 @@ class ACF_Factory
     {
         $field_group_id = $field_group_id <> "" ? $field_group_id : $this->field_group_id;
 
-        return $this->makeParent($this->makeWidgets($field_group_id), true);
+        return $this->makeParent(
+                    $this->makeWidgets($field_group_id),
+            true);
     }
 
     /**
@@ -139,7 +148,9 @@ class ACF_Factory
 
         $fieldObj = (object)$this->getFieldSchema($field_id);
 
-        return $this->makeParent($this->makeWidget($fieldObj), true);
+        return $this->makeParent(
+                    $this->makeWidget($fieldObj),
+                    true);
     }
 
     /**
@@ -165,6 +176,21 @@ class ACF_Factory
         return $child;
 
     }
+
+    /**
+     * Create hidden parent field
+     *
+     * @return string
+     */
+    public function makeHiddenParentField()
+    {
+        $parentSchema = $this->getParentSchema();
+
+        $excerpt = $parentSchema['excerpt'];
+
+        return "<input type='hidden' name='parent-{$excerpt}' id='parent-id-{$excerpt}' value='{$this->field_group_id}'>";
+    }
+
 
     /**
      * Create the html format of the data attribute
@@ -203,8 +229,10 @@ class ACF_Factory
 
             $options['options'] = [
                 "loop_support" => $this->loop_support,
-                "ctr" => $this->ctr
+                "ctr" => $this->ctr,
+                "post_id" => $this->postID
             ];
+
             $builder = new ACF_Builder($field, $options);
             return $builder->build();
         } catch (Exception $e) {
@@ -221,6 +249,14 @@ class ACF_Factory
     public function getFieldGroupSchema($field_group_id)
     {
         return $this->widgets = $this->schema->getField($field_group_id);
+    }
+
+
+    public function getParentSchema()
+    {
+        $widget = (array)$this->schema->getField($this->field_group_id);
+
+        return $widget[$this->field_group_id];
     }
 
     /**

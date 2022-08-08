@@ -1,0 +1,38 @@
+.bridge-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.bridge-row-wrap {
+  @extend .bridge-row;
+  flex-wrap: wrap;
+}
+
+.bridge-column {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.bridge-column-wrap {
+  @extend .bridge-column;
+  flex-wrap: wrap;
+}
+
+.fit-1 > .bridge-widget{
+  flex-basis: 100%;
+}
+
+.fit-2 > .bridge-widget {
+  flex-basis: 50%;
+}
+
+.fit-3 > .bridge-widget {
+  flex-basis: 33.33%;
+}
+
+.fit-4 > .bridge-widget {
+  flex-basis: 25%;
+}

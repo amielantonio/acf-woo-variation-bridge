@@ -55,7 +55,7 @@ CourseACFIntegration::setFieldId( $fieldID )->addLoopingSupport( $ctr = 0 )->ren
 ### Add or Set parent HTML class
 
 `$class` 
-: The html class that would be added to the parent HTML of the output 
+: The html class that would be added to the parent HTML of the output.
 
 
 ```
@@ -83,7 +83,7 @@ CourseACFIntegration::setFieldId( $fieldID )
 : The key to the data attribute *Ex: data-{$key}*
 
 `$value` 
-: The value given to the data attribute *Ex: data-{$key}="{$value}" 
+: The value given to the data attribute *Ex: data-{$key}="{$value}".
 
  
 ```
@@ -109,6 +109,19 @@ $dataAttributes = [ "key1" => "value1",
                   
 CourseACFIntegration::setFieldGroup( $fieldGroupID )->addDataAttribute( $dataAttributes )->render();
 ```
+
+### Add Post support for retrieving and saving of ACF
+
+`$post_id` 
+: The id of the post.
+```
+                  
+//                   
+CourseACFIntegration::setFieldGroup( $fieldGroupID )
+                      ->post( $post_id )
+                      ->render();
+```
+
 
 
 ## How it works

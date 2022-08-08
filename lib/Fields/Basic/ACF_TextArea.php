@@ -75,17 +75,25 @@ class ACF_TextArea extends FieldHTML {
         $oHtml = $this->opening_html;
         $cHtml = $this->closing_html;
 
-
         $html = "
             {$oHtml} {$htmlInfo['wrappers']}
                 {$htmlInfo['required']} 
                 {$htmlInfo['disabled']}
                 {$htmlInfo['mulitple']}
-                {$htmlInfo['name']}>
-                    {$htmlInfo['value']}                
-            {$cHtml}
+                {$htmlInfo['name']}
+                {$htmlInfo['data_attributes']}>{$htmlInfo['value']}{$cHtml}
         ";
         return $html;
+    }
+
+    /**
+     * Value HTML
+     *
+     * @return int|string
+     */
+    protected function valueHTML()
+    {
+        return $this->html_value;
     }
 
 }

@@ -1,0 +1,62 @@
+/* TOGGLE SWITCH
+ * -----------------------------
+ *
+ * A widget that returns true or false
+ */
+
+.bridge-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+
+  input {
+    opacity: 0;
+    height: 26px;
+    width: 100%;
+    z-index: 999;
+    position: absolute;
+    top: 2px;
+    left: 0;
+  }
+
+  &__slider {
+    position: absolute;
+    cursor: pointer;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 35px;
+
+    &:before {
+      content:"";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: .4s;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+    }
+
+  }
+
+  input:checked + .bridge-switch__slider {
+    background: #00B1CD;
+  }
+
+  input:focus + .bridge-switch__slider {
+    box-shadow: 0 0 1px #00B1CD;
+  }
+
+  input:checked + .bridge-switch__slider:before {
+    transform: translateX(25px);
+  }
+
+}
